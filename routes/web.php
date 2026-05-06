@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
+use App\Http\Controllers\backend\ExamController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
 use App\Http\Controllers\backend\SubjectController;
@@ -83,3 +84,7 @@ Route::get('/attendance/calendar/{id?}', [AttendanceController::class, 'studentC
     ->name('attendance.calendar');
 Route::get('/attendance/pdf', [AttendanceController::class, 'reportPdf'])
     ->name('attendance.pdf');
+
+
+//Exams Routes
+Route::resource('exams', ExamController::class);

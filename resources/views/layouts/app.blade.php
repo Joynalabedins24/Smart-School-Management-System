@@ -49,6 +49,8 @@
                                 <li><a class="dropdown-item" href="{{ route('subject.index') }}">Subjects</a></li>
                                 <li><a class="dropdown-item" href="{{ route('classe.index') }}">Classes</a></li>
                                 <li><a class="dropdown-item" href="{{ route('section.index') }}">Sections</a></li>
+                                <li><a class="dropdown-item" href="{{ route('exams.index') }}">Exams</a></li>
+
                             </ul>
 
 
@@ -63,8 +65,6 @@
                                 <li><a class="dropdown-item" href="{{ route('attendance.monthlyReport' ) }}">Monthly Attendance Report</a></li>
                                 <li><a class="dropdown-item" href="{{ route('attendance.calendar' ) }}">Individual Attendance History</a></li>
                             </ul>
-
-
                         </li>
 
                         <li>
