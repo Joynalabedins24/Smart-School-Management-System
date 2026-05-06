@@ -14,9 +14,14 @@ class Exam extends Model
         'end_date',
         'class_id',
     ];
+    protected $casts = [
+    'start_date' => 'date',
+    'end_date' => 'date',
+    ];
 
-    public function class()
+    public function classe()
     {
         return $this->belongsTo(Classe::class);
     }
+
 }

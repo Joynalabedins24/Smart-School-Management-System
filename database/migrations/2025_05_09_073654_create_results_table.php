@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('results', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('exam_id');   // 🔥 add this
             $table->unsignedBigInteger('subject_id');
-            $table->enum('exam_type', ['mid', 'final', 'quiz', 'assignment']);
-            $table->float('marks');
-            $table->string('grade');
+            $table->integer('marks');
+            $table->string('grade')->nullable();
             $table->timestamps();
 
-            // Foreign keys
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });
     }
