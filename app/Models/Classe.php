@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Exam;
+use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Section;
 
 class Classe extends Model
 {
@@ -24,10 +25,14 @@ class Classe extends Model
     {
         return $this->belongsTo(Teacher::class, 'class_teacher_id');
     }
-    public function sections() 
-    { 
-        return $this->hasMany(Section::class); 
-    } 
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
 
     // ভবিষ্যতে যদি এই ক্লাসের স্টুডেন্ট বা সেকশন যুক্ত করতে চাও, তাহলে রিলেশন আরও যোগ করা যাবে
 }

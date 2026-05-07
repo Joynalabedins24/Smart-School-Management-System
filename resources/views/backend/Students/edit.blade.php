@@ -17,8 +17,6 @@
 
     <form action="{{ route('student.update', $student->id) }}" method="POST" class="row g-3">
         @csrf
-
-        {{-- যদি PUT use করতে চাও --}}
         {{-- @method('PUT') --}}
 
         <!-- User Name (Display only) -->

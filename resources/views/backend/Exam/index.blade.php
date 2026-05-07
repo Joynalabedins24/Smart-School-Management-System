@@ -1,5 +1,8 @@
+{{ $exams }}
+
 @extends('layouts.app')
 @section('content')
+
     <div class= "bg-gray  col-11 mx-auto mb-2" >
         <div> <a class="btn btn-primary" href="{{ route('exams.create') }}"><i class="fa-regular fa-square-plus"></i> Add Exam</a></div>
     </div>
@@ -21,7 +24,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
-                        <th scope="col">class</th>
+                        <th scope="col">classe</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -30,9 +33,9 @@
                         <tr>
                             <th scope="row">{{$key + 1}}</th>
                             <td>{{ $exam->name }}</td>
-                            <td>{{ $exam->start_date }}</td>
-                            <td>{{ $exam->end_date }}</td>
-                            <td>{{ $exam->classe->name }}</td>
+                            <td>{{ \Carbon\Carbon::parse($exam->start_date)->format('jS F Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($exam->end_date)->format('jS F Y') }}</td>
+                            <td>{{ $exam->classe->name ?? '' }}</td>
                             <td>
                                 <div class="btn-group">
 

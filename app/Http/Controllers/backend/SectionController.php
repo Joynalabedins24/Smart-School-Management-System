@@ -35,7 +35,7 @@ class SectionController extends Controller
                 'ClasseName'=>'required'
             ]
         );
-        print("data gece");
+
         //database insertion
         $section = new Section();
         $section->class_id  = $request->ClasseName;

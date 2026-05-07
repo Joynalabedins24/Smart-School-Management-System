@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Classe;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ class Exam extends Model
         'end_date',
         'class_id',
     ];
+
     protected $casts = [
     'start_date' => 'date',
     'end_date' => 'date',
@@ -21,7 +23,7 @@ class Exam extends Model
 
     public function classe()
     {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(Classe::class, 'class_id');
     }
 
 }
