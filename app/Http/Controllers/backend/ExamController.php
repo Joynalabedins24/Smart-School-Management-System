@@ -68,5 +68,10 @@ class ExamController extends Controller
         return redirect()->route('exams.index')->with('success','Updated!');
     }
 
+     public function destroy($id)
+    {
+        Exam::findOrFail($id)->delete();
+        return back()->with('success','Deleted!');
+    }
 
 }
