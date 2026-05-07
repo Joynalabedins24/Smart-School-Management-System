@@ -4,6 +4,7 @@
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
 use App\Http\Controllers\backend\ExamController;
+use App\Http\Controllers\backend\ResultController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
 use App\Http\Controllers\backend\SubjectController;
@@ -88,3 +89,7 @@ Route::get('/attendance/pdf', [AttendanceController::class, 'reportPdf'])
 
 //Exams Routes
 Route::resource('exams', ExamController::class);
+
+//Result Routes
+Route::get('/get-exams/{class_id}', [ResultController::class, 'getExams']);
+Route::resource('results', ResultController::class);

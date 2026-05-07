@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Result;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,9 +49,9 @@ class Student extends Model
         return $this->hasMany(Attendances::class);
     }
 
-    public function marks()
+    public function result()
     {
-        return $this->hasMany(Mark::class);
+        return $this->hasMany(Result::class);
     }
 
     // Accessor Example: Full student ID with prefix
