@@ -27,15 +27,32 @@ class ResultController extends Controller
     }
 
 
+
+    public function getSubjects($classId , $examId){
+        $subjects = Result::join('exams', 'results.exam_id', '=', 'exams.id')
+                ->join('subjects', 'results.subject_id', '=', 'subjects.id')
+                ->where('exams.class_id', $classId)
+                ->where('results.exam_id', $examId)
+                ->distinct()
+                ->get(['subjects.id', 'subjects.name']);
+        return response()->json($subjects);
+    }
+
+
+
+
+
+
     public function index(Request $request)
     {
         $classes = Classe::all();
-        $subjects = Subject::all();
+        //$subjects = Subject::all();
 
-        //$classes = null;
-        //$subjects = null;
+        $classe = null;
+        $subject = null;
+        $exam = null;
 
-        $students = [];
+        $results = [];
         //new lines
 
         if ($request->class_id && $request->exam_id && $request->subject_id) {
@@ -56,8 +73,9 @@ class ResultController extends Controller
         //new lines
         //if ($request->date && $request->class_id && $request->section_id) {
 
-        //    $classe = Classe::find($request->class_id);
-        //    $exam = Exam::find($request->exam_id);
+            $classe = Classe::find($request->class_id);
+            $exam = Exam::find($request->exam_id);
+            $subject = Subject::find($request->subject_id);
 
            $results = Result::with(['student.user'])
                     ->where('exam_id', $request->exam_id)
@@ -68,7 +86,7 @@ class ResultController extends Controller
 
         //dd($students);
 
-        return view('backend.Results.index', compact('classes', 'results','subjects'));
+        return view('backend.Results.index', compact('classes', 'results','subject','exam','classe'));
     }
 
 

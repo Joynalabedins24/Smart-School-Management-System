@@ -2,9 +2,8 @@
 
 @section('content')
 
-<div class="card p-3 col-10 mx-auto">
 
-    <!-- FILTER FORM -->
+<div class="card p-3 col-10 mx-auto">
     <form method="GET" action="{{ route('results.index') }}" class="row mb-3">
 
 
@@ -24,12 +23,18 @@
             </select>
         </div>
 
-        <div class="col-md-3">
+        {{--<div class="col-md-3">
             <select name="subject_id" class="form-control" required>
                 <option>Select Class</option>
                 @foreach($subjects as $subject)
                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                 @endforeach
+            </select>
+        </div>--}}
+
+        <div class="col-md-3">
+            <select id="subject_id" name="subject_id" class="form-control mb-3">
+            <option>Select Subject</option>
             </select>
         </div>
 
@@ -38,44 +43,44 @@
         </div>
 
     </form>
+</div>
 
-
-   {{-- <div class="row">
-
-        <div class="col text-start m-2">
-            Date: {{ \Carbon\Carbon::parse($date)->format('jS F Y') }}
-        </div>
-
-        <div class="col text-center m-2">
-            Class : {{ $classe->name ?? '' }}
-        </div>
-
-        <div class="col text-end m-2">
-            Section : {{ $section->name ?? '' }}
-        </div>
+<div class="card p-3 col-10 mx-auto">
+    <div class ="row text-center mb-2">
+        <h3>Subject wise Exam Result</h3>
     </div>
+
     <div class="row text-primary">
 
         <div class="col text-start m-2">
-            <strong>Total Student : {{ $totalStudent }}</strong>
+            <strong>Date : {{  now()->format('jS F Y') }}</strong>
 
         </div>
 
-        <div class="col text-center m-2">
-            <strong>Present : {{ $present ?? '' }}</strong>
-
-        </div>
 
         <div class="col text-end m-2">
-            <strong>Absent : {{ $absent ?? '' }}</strong>
-
-        </div>
-        <div class="col text-end m-2">
-            <strong>Attendance : {{ $percentage ?? '' }}%</strong>
+            <strong>Class taken By : {{ $subject->teacher->user->name ?? '' }}</strong>
 
         </div>
 
     </div>
+
+
+   <div class="row">
+
+        <div class="col text-start m-2">
+            Class: {{ $classe->name ?? '-'}}
+        </div>
+
+        <div class="col text-center m-2">
+            Exam : {{ $exam->name ?? '' }}
+        </div>
+
+        <div class="col text-end m-2">
+            Subject : {{ $subject->name ?? '' }}
+        </div>
+    </div>
+    {{--
 
     <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 2px">
         <div class="progress-bar" style="width: {{ $percentage }}%"></div>
@@ -154,6 +159,41 @@ $('#class_id').on('change', function () {
     } else {
         $('#exam_id').empty().append('<option value="">Choose...</option>');
     }
+});
+</script>
+
+<script>
+function loadSubjects() {
+    var classId = $('#class_id').val();
+    var examId = $('#exam_id').val();
+
+    if (classId && examId) {
+        $.ajax({
+            url: '/get-subjects/' + classId + '/' + examId,
+            type: 'GET',
+            success: function (data) {
+                $('#subject_id').empty().append('<option value="">Choose...</option>');
+
+                $.each(data, function (key, subject) {
+                    $('#subject_id').append(
+                        '<option value="' + subject.id + '">' + subject.name + '</option>'
+                    );
+                });
+            }
+        });
+    } else {
+        $('#subject_id').empty().append('<option value="">Choose...</option>');
+    }
+}
+
+// class change
+$('#class_id').on('change', function () {
+    loadSubjects();
+});
+
+// exam change
+$('#exam_id').on('change', function () {
+    loadSubjects();
 });
 </script>
 
