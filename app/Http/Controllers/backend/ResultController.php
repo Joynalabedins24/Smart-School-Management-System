@@ -9,6 +9,7 @@ use App\Models\Result;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResultController extends Controller
 {
@@ -114,6 +115,44 @@ class ResultController extends Controller
 
         return view('backend.Results.index', compact('classes', 'results','subject','exam','classe'));
     }
+
+
+    public function marksheet(Request $request)
+    {
+        $classes = Classe::all();
+        $results = [];
+        if (Auth::user()->student){
+            if($request->exam_id){
+                $student_id = Auth::user()->student->id;
+                $exam_id = $request->exam_id;
+
+                $student = Student::find($student_id);
+                $exam = Exam::find($exam_id);
+                $results = Result::with(['student.user', 'exam'])
+                        ->where('exam_id', $exam_id)
+                        ->where('student_id', $student_id)
+                        ->get();
+
+            }
+        } else {
+            if($request->exam_id && $request->student_id){
+                $student_id = $request->student_id;
+                $exam_id = $request->exam_id;
+                $student = Student::find($student_id);
+                $exam = Exam::find($exam_id);
+                $results = Result::with(['student.user', 'exam'])
+                        ->where('exam_id', $exam_id)
+                        ->where('student_id', $student_id)
+                        ->get();
+            }
+        //print($results);
+        //dd($results);
+        //echo 'others';
+        }
+
+        return view('backend.Results.marks_sheet', compact('results','classes'));
+    }
+
 
 
 

@@ -74,7 +74,7 @@ Route::delete('/sections/delete/{id}', [SectionController::class, 'destroy'])->n
 Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
 Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
 
-Route::get('/get-students/{class_id}/{section_id}', [AttendanceController::class, 'getStudents']);
+Route::get('/get-students/{class_id}/{section_id?}', [AttendanceController::class, 'getStudents']);
 Route::get('/get-students-edit/{class_id}/{section_id}/{date}',
     [AttendanceController::class, 'getStudentsForEdit']);
 Route::get('/attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
@@ -97,3 +97,4 @@ Route::get('/get-subjectsbyclass/{classId}', [ResultController::class, 'getSubje
 Route::get('/get-students-result/{class_id}/{exam_id}/{subject_id}',
     [ResultController::class, 'getStudentsForResult']);
 Route::resource('results', ResultController::class);
+Route::get('/result/marksheet', [ResultController::class, 'marksheet'])->name('result.marksheet');

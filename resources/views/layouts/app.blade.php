@@ -13,6 +13,8 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @vite(['resources/css/style.css'])
@@ -74,7 +76,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('results.create') }}">Entry Marks By Subject</a></li>
                                 <li><a class="dropdown-item" href="{{ route('results.index' ) }}">Subject Wise Result view</a></li>
-                                <li><a class="dropdown-item" href="{{ route('attendance.calendar' ) }}">Individual Result</a></li>
+                                <li><a class="dropdown-item" href="{{ route('result.marksheet' ) }}">Individual Result</a></li>
                                 <li><a class="dropdown-item" href="{{ route('attendance.monthlyReport' ) }}"> Class Wise Ranking </a></li>
                             </ul>
                         </li>

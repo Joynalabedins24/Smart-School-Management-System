@@ -23,12 +23,14 @@ class AttendanceController extends Controller
 
 
 
-    public function getStudents($class_id, $section_id)
+    public function getStudents($class_id, $section_id = null)
     {
-       $students = Student::with('user')
-                            ->where('class_id', $class_id)
-                            ->where('section_id', $section_id)
-                            ->get();
+        $students = Student::with('user')
+                ->where('class_id', $class_id)
+                ->when($section_id, function ($query) use ($section_id) {
+                    $query->where('section_id', $section_id);
+                })
+                ->get();
 
         return response()->json($students);
     }
