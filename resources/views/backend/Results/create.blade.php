@@ -65,7 +65,7 @@
 
         </div>
 
-        <button class="btn btn-success col-2 mt-3">Save/Update Marks</button>
+        <button class="btn btn-success col-2 mt-3">Save/Update Result</button>
 
 
 

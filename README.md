@@ -15,24 +15,32 @@ Laravel, MySQL, JavaScript, Bootstrap
     ```bash
     git clone https://github.com/Joynalabedins24/Smart-School-Management-System.git
 2. Move into the project directory
+    ```bash
     cd Smart-School-Management-System
 3. Install PHP dependencies
     composer install
 4. Install NPM dependencies
+    ```bash
     npm install
 5. Copy environment file
+    ```bash
     cp .env.example .env
 6. Generate application key
+    ```bash
     php artisan key:generate
 7. Configure database credentials in .env
+    ```bash
     DB_DATABASE=your_database_name
     DB_USERNAME=root
     DB_PASSWORD=
 8. Run migrations
+    ```bash
     php artisan migrate
 9. Start development server
+    ```bash
     php artisan serve
 10. Run Vite
+    ```bash
    npm run dev
 11. Then Open Browser
    http://127.0.0.1:8000 
