@@ -118,61 +118,33 @@ class ResultController extends Controller
 
 
 
-    function store(Request $request){
+    public function store(Request $request)
+    {
+        foreach ($request->students as $studentId => $data) {
+            $request->validate(
+                [
+                    'exam_id' => 'required',
+                    'subject_id' => 'required',
+                    'students' => 'required|array'
+                ]
+            );
 
-        //validation process
-        $request->validate(
-            [
-
-                'dob'=>'required|date|before:2015-01-01',
-                'doa' => 'required|date|before_or_equal:today|after:dob',
-                'gender'=>'required',
-                'class_id'=>'required|max:20',
-                'section_id'=>'required|max:20',
-                'gName'=>'required|max:20',
-                'gPhone'=>'required',
-                'address'=>'required'
-            ]
-        );
-        $existingStudent = Student::where('user_id', Auth::user()->id)->first();
-        $existingTeacher = Teacher::where('user_id', Auth::user()->id)->first();
-
-        if ($existingStudent||$existingTeacher) {
-            return redirect()->back()->with('error', 'This user is already registered as a student!');
+            Result::updateOrCreate(
+                [
+                    'student_id' => $studentId,
+                    'exam_id' => $request->exam_id,
+                    'subject_id' => $request->subject_id
+                ],
+                [
+                    'marks' => $data['marks'] ?? "",
+                    'grade' => $data['grade'] ?? ""
+                ]
+            );
         }
-        else{
-            //Generate Student ID
-            //find last student id
-            //$lastStudent = Student::orderBy('created_at', 'desc')->first();
-            $lastStudent = Student::latest()->first();
-            //return  $lastStudent->student_id ;
-            if ($lastStudent) {
-            // 'STD-00009' → 9 + 1 = 10
-            $lastIdNumber = (int) Str::after($lastStudent->student_id, 'std_');
-            $newIdNumber = $lastIdNumber + 1;
-            } else {
-            $newIdNumber = 1;
-            }
-            $newStudentId = 'std_' . str_pad($newIdNumber, 5, '0', STR_PAD_LEFT); // e.g., STD-00010
 
-            $student = new Student();
-            $student->user_id = auth::user()->id;
-            $student->student_id = $newStudentId;
-            $student->dob = $request->dob;
-            $student->gender = $request->gender;
-            $student->class_id = $request->class_id;
-            $student->section_id = $request->section_id;
-            $student->admission_date = $request->doa;
-            $student->guardian_name = $request->gName;
-            $student->guardian_phone = $request->gPhone;
-            $student->address = $request->address;
-            $student->save();
-
-            //database insertion
-            return redirect()->route('student.index')->with('success','Information Updated Successfully!');
-            }
-
+        return back()->with('success', 'Marks Saved');
     }
+
 
 
     public function edit($id)

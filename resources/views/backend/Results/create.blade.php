@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<form method="POST" action="{{ route('results.store') }}">
 <div class="card p-3 col-10 mx-auto">
     <div class="row mb-3">
 
@@ -25,7 +26,7 @@
         <!-- Exam -->
             <div class="input-group mb-3">
             <label class="input-group-text" for="exam_id">Exam :</label>
-            <select class="form-select" id="exam_id">
+            <select class="form-select" id="exam_id" name="exam_id">
                 <option>Choose...</option>
 
             </select>
@@ -38,7 +39,7 @@
             <!-- Subject -->
             <div class="input-group mb-3">
             <label class="input-group-text" for="subject_id">Subjects</label>
-            <select class="form-select" id="subject_id">
+            <select class="form-select" id="subject_id" name="subject_id">
                 <option>Choose...</option>
 
             </select>
@@ -51,7 +52,7 @@
         <h2 class="m-1 text-center">Marks Distribution</h2>
     </div>
 
-    <form method="POST" action="{{ route('attendance.store') }}">
+    <form method="POST" action="{{ route('results.store') }}">
         @csrf
         <!-- Students List -->
         <div class="card" style="background-color:#ececec;">
@@ -64,11 +65,12 @@
 
         </div>
 
-        <button class="btn btn-success mt-3">Save Attendance</button>
+        <button class="btn btn-success col-2 mt-3">Save/Update Marks</button>
 
-    </form>
+
 
 </div>
+</form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -136,8 +138,8 @@ document.getElementById('subject_id').addEventListener('change', function () {
                         <th>#</th>
                         <th>Student Name</th>
                         <th>Student ID</th>
-                        <th>Marks</th>
-                        <th>Grade</th>
+                        <th class="col-2">Marks</th>
+                        <th class="col-2">Grade</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -154,9 +156,10 @@ document.getElementById('subject_id').addEventListener('change', function () {
                     <td>${student.student_id}</td>
 
                     <td>
-                        <input type="text"
+                        <input  type="number"
+
                                 name="students[${student.id}][marks]"
-                                class="form-control"
+                                class="form-control marks"
                                 placeholder="Enter Marks"
                                 value ="${student.marks}">
 
@@ -164,11 +167,12 @@ document.getElementById('subject_id').addEventListener('change', function () {
                     </td>
 
                     <td>
-                        <input type="text"
-                               name="students[${student.id}][grade]"
-                               class="form-control"
-                               placeholder="Optional"
-                               value ="${student.grade}">
+                        <input  type="text"
+
+                                name="students[${student.id}][grade]"
+                                class="form-control grade"
+                                placeholder="Optional"
+                                value ="${student.grade}" readonly>
                     </td>
                 </tr>
                 `;
@@ -181,6 +185,48 @@ document.getElementById('subject_id').addEventListener('change', function () {
 
 });
 </script>
+
+<script>
+
+document.addEventListener('input', function(e){
+
+    if(e.target.classList.contains('marks')){
+
+        let marks = parseInt(e.target.value) || 0;
+
+        let grade = '';
+
+        if (marks >= 80){
+            grade = 'A+';
+        }
+        else if (marks >= 70){
+            grade = 'A';
+        }
+        else if (marks >= 60){
+            grade = 'A-';
+        }
+        else if (marks >= 50){
+            grade = 'B';
+        }
+        else if (marks >= 40){
+            grade = 'C';
+        }
+        else if (marks >= 33){
+            grade = 'D';
+        }
+        else{
+            grade = 'F';
+        }
+
+        let row = e.target.closest('tr');
+
+        row.querySelector('.grade').value = grade;
+    }
+
+});
+
+</script>
+
 
 
 @endsection
