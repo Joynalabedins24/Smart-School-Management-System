@@ -41,11 +41,11 @@ Laravel, MySQL, JavaScript, Bootstrap
     php artisan serve
 10. Run Vite
     ```bash
-   npm run dev
+    npm run dev
 
 11. Then Open Browser
     ```bash
-   http://127.0.0.1:8000 
+    http://127.0.0.1:8000 
 
 
 
