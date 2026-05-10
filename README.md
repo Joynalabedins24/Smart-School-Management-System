@@ -42,7 +42,9 @@ Laravel, MySQL, JavaScript, Bootstrap
 10. Run Vite
     ```bash
    npm run dev
+
 11. Then Open Browser
+    ```bash
    http://127.0.0.1:8000 
 
 
