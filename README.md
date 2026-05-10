@@ -1,10 +1,21 @@
 # Smart School Management System
 
 ## Features
-- Attendance system (class & section wise)
-- Monthly report with percentage
-- Calendar view with status
-- PDF export & print system
+- Student Management System
+- Teacher Management System
+- Class & Section Management
+- Subject Management
+- Attendance Management
+- Monthly Attendance Report
+- Attendance Percentage Calculation
+- Student Attendance Calendar View
+- Exam Management System
+- Result Management System
+- Auto Grade Generation
+- Print / PDF Report System
+- Authentication System
+- Responsive Admin Dashboard
+- REST API Support(Class,Section,Attendance)
 
 ## Tech Stack
 Laravel, MySQL, JavaScript, Bootstrap
@@ -18,6 +29,7 @@ Laravel, MySQL, JavaScript, Bootstrap
     ```bash
     cd Smart-School-Management-System
 3. Install PHP dependencies
+    ```bash
     composer install
 4. Install NPM dependencies
     ```bash
