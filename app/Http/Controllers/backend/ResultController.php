@@ -14,10 +14,10 @@ class ResultController extends Controller
 {
     function create(){
         $classes = Classe::orderBY('created_at','DESC')->get();
-        $section = Section::orderBY('created_at','DESC')->get();
-        $student_id= Auth::user()->name;
+        //$section = Section::orderBY('created_at','DESC')->get();
+        //$student_id= Auth::user()->name;
 
-        return view('backend.Students.create',compact('classes','section','student_id'));
+        return view('backend.Results.create',compact('classes'));
     }
 
 
@@ -38,6 +38,32 @@ class ResultController extends Controller
         return response()->json($subjects);
     }
 
+    public function getSubjectsByClass($classId){
+        $subjects   = Subject::where('class_id', $classId)
+                    ->get(['id', 'name']);
+        return response()->json($subjects);
+    }
+
+
+    public function getStudentsForResult($class_id, $exam_id, $subject_id)
+    {
+        $students = Student::with('user')
+            ->where('class_id', $class_id)
+            //->where('section_id', $section_id)
+            ->get();
+
+        foreach ($students as $student) {
+            $result = Result::where('student_id', $student->id)
+                ->where('exam_id', $exam_id)
+                ->where('subject_id', $subject_id)
+                ->first();
+
+            $student->marks = $result->marks ?? " ";
+            $student->grade = $result->grade ?? " ";
+        }
+
+        return response()->json($students);
+    }
 
 
 

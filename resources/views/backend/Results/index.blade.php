@@ -23,15 +23,6 @@
             </select>
         </div>
 
-        {{--<div class="col-md-3">
-            <select name="subject_id" class="form-control" required>
-                <option>Select Class</option>
-                @foreach($subjects as $subject)
-                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                @endforeach
-            </select>
-        </div>--}}
-
         <div class="col-md-3">
             <select id="subject_id" name="subject_id" class="form-control mb-3">
             <option>Select Subject</option>

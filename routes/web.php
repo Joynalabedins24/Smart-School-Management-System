@@ -93,4 +93,7 @@ Route::resource('exams', ExamController::class);
 //Result Routes
 Route::get('/get-exams/{class_id}', [ResultController::class, 'getExams']);
 Route::get('/get-subjects/{classId}/{examId}', [ResultController::class, 'getSubjects']);
+Route::get('/get-subjectsbyclass/{classId}', [ResultController::class, 'getSubjectsByClass']);
+Route::get('/get-students-result/{class_id}/{exam_id}/{subject_id}',
+    [ResultController::class, 'getStudentsForResult']);
 Route::resource('results', ResultController::class);

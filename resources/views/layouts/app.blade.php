@@ -72,7 +72,7 @@
                                Results
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('attendance.create') }}">Entry Marks By Subject</a></li>
+                                <li><a class="dropdown-item" href="{{ route('results.create') }}">Entry Marks By Subject</a></li>
                                 <li><a class="dropdown-item" href="{{ route('results.index' ) }}">Subject Wise Result view</a></li>
                                 <li><a class="dropdown-item" href="{{ route('attendance.calendar' ) }}">Individual Result</a></li>
                                 <li><a class="dropdown-item" href="{{ route('attendance.monthlyReport' ) }}"> Class Wise Ranking </a></li>
