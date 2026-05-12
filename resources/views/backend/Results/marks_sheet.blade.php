@@ -52,24 +52,111 @@
     <div>
         <h2 class="m-1 text-center"> School Name</h2>
         <h4 class="m-1 text-center">Mark Sheet</h4>
+        <h5 class="m-1 text-center">Final Exam</h5>
     </div>
     <div class="row m-3">
-        <div class="col" style ="background-color:;" >
+        <div class="col float-start" style ="background-color:; font-size: 16px;" >
             <div><b>Student Information:</b></div>
-            <div>Name:</div>
-            <div>Id:</div>
-            <div>Class:</div>
-            <div>Section:</div>
-            <div>Gender:</div>
-            <div>Date of Birth:</div>
-            <div></div>
+            <div class="row">
+                <div class="col-4">Name</div>
+                <div class="col-6">: {{$student->user->name ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Id</div>
+                <div class="col-6">: {{$student->student_id ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Class</div>
+                <div class="col-6">: {{$student->class->name ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Section</div>
+                <div class="col-6">: {{$student->section->name ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Gender</div>
+                <div class="col-6">: {{$student->gender ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Date of Birth</div>
+                <div class="col-6">: {{ optional($student)->dob ? \Carbon\Carbon::parse($student->dob)->format('jS F Y') : '' }}
+                </div>
+            </div>
+
             <div><b>Exam Information:</b></div>
-            <div>Exam Name:</div>
-            <div>Start:</div>
-            <div>End:</div>
+            <div class="row">
+                <div class="col-4">Exam Name</div>
+                <div class="col-6">: {{$exam->name ?? ""}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Start</div>
+                <div class="col-6">: {{--{{ \Carbon\Carbon::parse($exam->start_date)->format('jS F Y') ""}} --}}
+                    {{ optional($exam)->start_date ? \Carbon\Carbon::parse($exam->start_date)->format('jS F Y') : '' }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">End</div>
+                <div class="col-6">:
+                    {{ optional($exam)->end_date ? \Carbon\Carbon::parse($exam->end_date)->format('jS F Y') : '' }}
+                </div>
+            </div>
         </div>
-        <div class="col" style ="background-color:green;" >
-            Grading System
+        <div class="col " style ="background-color:;" >
+            <div class="col-6 float-end">
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Marks (%)</th>
+                            <th>Grade</th>
+                            <th>GPA</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>80 - 100</td>
+                            <td>A+</td>
+                            <td>5.00</td>
+                        </tr>
+
+                        <tr>
+                            <td>70 - 79</td>
+                            <td>A</td>
+                            <td>4.00</td>
+                        </tr>
+
+                        <tr>
+                            <td>60 - 69</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                        </tr>
+
+                        <tr>
+                            <td>50 - 59</td>
+                            <td>B</td>
+                            <td>3.00</td>
+                        </tr>
+
+                        <tr>
+                            <td>40 - 49</td>
+                            <td>C</td>
+                            <td>2.00</td>
+                        </tr>
+
+                        <tr>
+                            <td>33 - 39</td>
+                            <td>D</td>
+                            <td>1.00</td>
+                        </tr>
+
+                        <tr>
+                            <td>0 - 32</td>
+                            <td>F</td>
+                            <td>0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="m-3">
@@ -77,10 +164,11 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Subject</th>
+                        <th class="col-7">Subject</th>
                         <th>Marks</th>
                         <th>Grade</th>
                         <th>GPA</th>
+                        <th>CGPA</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,9 +184,28 @@
                             {{ $result->grade}}
                         </td>
 
-                        <td>
-
+                        <td >
+                            @if($result->grade == 'A+')
+                                5.00
+                            @elseif($result->grade == 'A')
+                                4.00
+                            @elseif($result->grade == 'A-')
+                                3.50
+                            @elseif($result->grade == 'B')
+                                3.00
+                            @elseif($result->grade == 'C')
+                                2.00
+                            @elseif($result->grade == 'D')
+                                1.00
+                            @else
+                                0.00
+                            @endif
                         </td>
+                        @if($key == 0)
+                        <th rowspan="{{ $results->count() }}" class="align-middle" >
+                            {{ number_format($cgpa, 2) }}
+                        </th>
+                        @endif
                     </tr>
                     @endforeach
 

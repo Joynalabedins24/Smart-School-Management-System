@@ -121,20 +121,47 @@ class ResultController extends Controller
     {
         $classes = Classe::all();
         $results = [];
+        $cgpa = 0;
+        $exam = null;
         if (Auth::user()->student){
-            if($request->exam_id){
-                $student_id = Auth::user()->student->id;
-                $exam_id = $request->exam_id;
 
-                $student = Student::find($student_id);
+            $student_id = Auth::user()->student->id;
+            $student = Student::find($student_id);
+            if($request->exam_id){
+                $exam_id = $request->exam_id;
                 $exam = Exam::find($exam_id);
                 $results = Result::with(['student.user', 'exam'])
                         ->where('exam_id', $exam_id)
                         ->where('student_id', $student_id)
                         ->get();
+                $totalPoints = 0;
+
+                foreach ($results as $result) {
+
+                    if ($result->grade == 'A+') {
+                    $point = 5.00;
+                    } elseif ($result->grade == 'A') {
+                    $point = 4.00;
+                    } elseif ($result->grade == 'A-') {
+                    $point = 3.50;
+                    } elseif ($result->grade == 'B') {
+                    $point = 3.00;
+                    } elseif ($result->grade == 'C') {
+                    $point = 2.00;
+                    } else {
+                    $point = 0.00;
+                    }
+
+                    $totalPoints += $point;
+                }
+
+                $cgpa = $totalPoints / $results->count();
 
             }
-        } else {
+        }
+        else {
+            $student = [];
+            //$exam = [];
             if($request->exam_id && $request->student_id){
                 $student_id = $request->student_id;
                 $exam_id = $request->exam_id;
@@ -144,13 +171,31 @@ class ResultController extends Controller
                         ->where('exam_id', $exam_id)
                         ->where('student_id', $student_id)
                         ->get();
+
+                foreach ($results as $result) {
+
+                    if ($result->grade == 'A+') {
+                    $point = 5.00;
+                    } elseif ($result->grade == 'A') {
+                    $point = 4.00;
+                    } elseif ($result->grade == 'A-') {
+                    $point = 3.50;
+                    } elseif ($result->grade == 'B') {
+                    $point = 3.00;
+                    } elseif ($result->grade == 'C') {
+                    $point = 2.00;
+                    } else {
+                    $point = 0.00;
+                    }
+
+                    $totalPoints += $point;
+                }
+
+                $cgpa = $totalPoints / $results->count();
             }
-        //print($results);
-        //dd($results);
-        //echo 'others';
         }
 
-        return view('backend.Results.marks_sheet', compact('results','classes'));
+        return view('backend.Results.marks_sheet', compact('classes','student','exam','results','cgpa'));
     }
 
 
