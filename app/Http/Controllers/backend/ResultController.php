@@ -134,6 +134,7 @@ class ResultController extends Controller
                         ->where('exam_id', $exam_id)
                         ->where('student_id', $student_id)
                         ->get();
+
                 $totalPoints = 0;
 
                 foreach ($results as $result) {
@@ -171,6 +172,8 @@ class ResultController extends Controller
                         ->where('exam_id', $exam_id)
                         ->where('student_id', $student_id)
                         ->get();
+
+                $totalPoints = 0;
 
                 foreach ($results as $result) {
 

@@ -12,11 +12,17 @@
         <!-- Class -->
             <div class="input-group">
             <label class="input-group-text" for="class_id">Class :</label>
-            <select id="class_id" name="class_id" class="form-select">
-                <option>Choose...</option>
-                @foreach($classes as $class)
-                <option value="{{ $class->id }}">{{ $class->name }}</option>
-                @endforeach
+            <select id="class_id"
+                    name="class_id"
+                    class="form-select"
+                    {{ Auth::user()->student ? 'disabled' : '' }}>
+                        <option>Choose...</option>
+                        @foreach($classes as $class)
+                            <option value="{{ $class->id }}"
+                                {{ Auth::user()->student && Auth::user()->student->class_id == $class->id ? 'selected' : '' }}
+                                >{{ $class->name }}
+                            </option>
+                        @endforeach
             </select>
             </div>
         </div>
@@ -269,6 +275,24 @@ $(document).ready(function () {
 });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+    $('#class_id').change(function () {
+
+        let class_id = $(this).val();
+
+        // ajax call for exam load
+
+    });
+
+        @if(Auth::user()->student)
+            $('#class_id').trigger('change');
+        @endif
+
+    });
+</script>
 
 
 
