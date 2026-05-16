@@ -11,18 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fees', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->decimal('amount', 10, 2);
-            $table->date('due_date');
-            $table->date('paid_on')->nullable(); // null মানে এখনো পরিশোধ হয়নি
-            $table->enum('status', ['paid', 'unpaid', 'partial'])->default('unpaid');
-            $table->timestamps();
+            Schema::create('fees', function (Blueprint $table) {
 
-            // Foreign key constraint
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-        });
+            $table->id();
+
+            $table->foreignId('student_id')
+                  ->constrained()
+                  ->onDelete('cascade');
+
+            $table->string('fee_type');
+
+            $table->string('month')->nullable();
+
+            $table->year('year');
+
+            $table->decimal('total_amount', 10, 2);
+
+            $table->enum('status', [
+                    'paid',
+                    'partial',
+                    'unpaid'
+                ])->default('unpaid');
+
+            $table->timestamps();
+            });
     }
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Fee extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'student_id',
         'amount',
@@ -20,5 +20,10 @@ class Fee extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(FeePayment::class);
     }
 }
