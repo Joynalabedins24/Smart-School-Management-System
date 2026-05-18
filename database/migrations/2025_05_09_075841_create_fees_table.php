@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('student_id')
                   ->constrained()
                   ->onDelete('cascade');
-
             $table->string('fee_type');
 
             $table->string('month')->nullable();
@@ -26,6 +25,10 @@ return new class extends Migration
             $table->year('year');
 
             $table->decimal('total_amount', 10, 2);
+
+            $table->date('due_date');
+
+            $table->decimal('late_fee', 10, 2);
 
             $table->enum('status', [
                     'paid',

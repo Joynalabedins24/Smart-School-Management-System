@@ -80,6 +80,15 @@
                                 <li><a class="dropdown-item" href="{{ route('attendance.monthlyReport' ) }}"> Class Wise Ranking </a></li>
                             </ul>
                         </li>
+                        <li class="dropdown">
+                            <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="">
+                               Fees
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('Fees.create') }}">Fees Generate</a></li>
+                            </ul>
+                        </li>
+
 
                         <li>
 

@@ -10,13 +10,14 @@ class Fee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id',
-        'amount',
-        'due_date',
-        'paid_on',
-        'status',
+    'student_id',
+    'fee_type',
+    'month',
+    'year',
+    'total_amount',
+    'due_date',
+    'status',
     ];
-
     public function student()
     {
         return $this->belongsTo(Student::class);

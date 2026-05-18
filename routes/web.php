@@ -4,6 +4,7 @@
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
 use App\Http\Controllers\backend\ExamController;
+use App\Http\Controllers\backend\FeeController;
 use App\Http\Controllers\backend\ResultController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
@@ -98,3 +99,8 @@ Route::get('/get-students-result/{class_id}/{exam_id}/{subject_id}',
     [ResultController::class, 'getStudentsForResult']);
 Route::resource('results', ResultController::class);
 Route::get('/result/marksheet', [ResultController::class, 'marksheet'])->name('result.marksheet');
+
+
+
+//Fees Routes
+Route::resource('Fees', FeeController::class);
