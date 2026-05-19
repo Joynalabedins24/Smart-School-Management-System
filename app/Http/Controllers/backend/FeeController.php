@@ -15,12 +15,33 @@ class FeeController extends Controller
      */
     public function index(Request $request)
     {
+
+        $allFees = Fee::where('status', '!=', 'paid')->get();
+
+        foreach($allFees as $fee){
+
+            if(now()->gt($fee->due_date) && $fee->late_fee == 0){
+
+                $fee->late_fee = 100;
+
+                $fee->save();
+            }
+
+            if(now()->lte($fee->due_date) && $fee->late_fee == 100){
+
+                $fee->late_fee = 0;
+
+                $fee->save();
+            }
+        }
+
         $classes = Classe::all();
 
         $fees = Fee::with([ 'student.user',
                             'student.class',
                             'payments'
                         ]);
+
 
         if ($request->search) {
 
@@ -115,7 +136,13 @@ class FeeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $fee = Fee::with([
+        'student.user',
+        'student.class',
+        'payments'
+        ])->findOrFail($id);
+
+        return view('backend.Fees.show', compact('fee'));
     }
 
     /**
@@ -123,7 +150,8 @@ class FeeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $fee = Fee::findOrFail($id);
+        return view('backend.Fees.edit', compact('fee'));
     }
 
     /**
@@ -131,7 +159,34 @@ class FeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $request->validate([
+
+            'fee_type' => 'required',
+
+            'total_amount' => 'required|numeric|min:0',
+
+                'due_date' => 'required|date',
+
+        ]);
+
+        $fee = Fee::findOrFail($id);
+
+        $fee->update([
+
+        'fee_type' => $request->fee_type,
+
+        'month' => $request->month,
+
+        'year' => $request->year,
+
+        'total_amount' => $request->total_amount,
+
+        'due_date' => $request->due_date,
+
+        ]);
+
+        return redirect()->route('Fees.index')->with('success', 'Fee Updated Successfully!');
     }
 
     /**

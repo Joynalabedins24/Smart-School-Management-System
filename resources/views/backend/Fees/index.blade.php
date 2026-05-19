@@ -82,6 +82,7 @@
                         <th scope="col">Class</th>
                         <th scope="col">Fee Type</th>
                         <th scope="col">Month</th>
+                        <th scope="col">Due Date</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Late Fee</th>
                         <th scope="col">Due</th>
@@ -98,6 +99,7 @@
                             <td>{{ $fee->student->class->name }}</td>
                             <td>{{ $fee->fee_type }}</td>
                             <td>{{ $fee->month }}</td>
+                            <td>{{ $fee->due_date }}</td>
                             <td>৳ {{ number_format($fee->total_amount, 2) }}</td>
                             <td>৳ {{ number_format($fee->late_fee, 2) }}</td>
                             @php
@@ -129,8 +131,11 @@
                                 <div class="btn-group">
 
 
-                                    <a class="btn btn-sm bg-primary fw-bold" href=""> View </a>
-                                    <a class="btn btn-sm bg-warning  fw-bold" href=""> Edit </a>
+                                    <a class="btn btn-sm bg-primary fw-bold" href="{{ route('Fees.show', $fee->id) }}"> View </a>
+
+                                    @if($fee->payments->count() == 0)
+                                        <a class="btn btn-sm bg-warning  fw-bold" href="{{ route('Fees.edit', $fee->id) }}"> Edit </a>
+                                    @endif
 
                                     <form action="" method="POST" style="display:inline;">
                                         @csrf
