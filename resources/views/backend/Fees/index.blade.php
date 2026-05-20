@@ -1,10 +1,14 @@
 @extends('layouts.app')
 @section('content')
-    <div class= "bg-gray  col-11 mx-auto mb-2" >
-        <div> <a class="btn btn-primary" href="{{ route('Fees.create') }}"><i class="fa-regular fa-square-plus"></i> Add Fees</a></div>
-    </div>
+        <div class= "bg-gray  col-11 mx-auto mb-2" >
+            <div>
+                <h3 class="text-center">Fee List</h3>
+            </div>
+            <div> <a class="btn btn-primary" href="{{ route('Fees.create') }}"><i class="fa-regular fa-square-plus"></i> Add Fees</a></div>
+        </div>
 
         <div class="col-11 mx-auto" >
+
             <form method="GET" class="input-group" action="{{ route('Fees.index') }}" >
 
             <!-- Search -->
@@ -129,21 +133,12 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-
-
-                                    <a class="btn btn-sm bg-primary fw-bold" href="{{ route('Fees.show', $fee->id) }}"> View </a>
-
+                                        <a class="btn btn-sm btn-outline-primary fw-bold" href="{{ route('Fees.show', $fee->id) }}"> View </a>
+                                        <a class="btn btn-sm btn-outline-success  fw-bold" href=""> Pay </a>
                                     @if($fee->payments->count() == 0)
-                                        <a class="btn btn-sm bg-warning  fw-bold" href="{{ route('Fees.edit', $fee->id) }}"> Edit </a>
+                                        <a class="btn btn-sm btn-outline-warning  fw-bold" href="{{ route('Fees.edit', $fee->id) }}"> Edit </a>
                                     @endif
 
-                                    <form action="" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                    <button onclick="return confirm('Delete?')" class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-
-                                    <a class="btn btn-sm bg-success  fw-bold" href=""> Pay </a>
                                 </div>
                             </td>
                         </tr>
@@ -156,5 +151,47 @@
             </div>
         </div>
 
+
     </div>
+    @if(
+    request('class_id') &&
+    request('fee_type') &&
+    request('month')
+    )
+
+    <div class="shadow-sm card col-11 mx-auto">
+        <form action="{{ route('Fees.bulkDelete') }}"
+                    method="POST">
+
+                    @csrf
+                    @method('DELETE')
+
+                    <input type="hidden"
+                    name="class_id"
+                    value="{{ request('class_id') }}">
+
+                    <input type="hidden"
+                    name="fee_type"
+                    value="{{ request('fee_type') }}">
+
+                    <input type="hidden"
+                    name="month"
+                    value="{{ request('month') }}">
+
+                    <button class="btn btn-outline-danger w-100">
+
+                        Bulk Delete
+
+                    </button>
+
+        </form>
+    </div>
+
+    @endif
+
+
+
+
+
+
 @endsection

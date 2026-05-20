@@ -8,7 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class FeePayment extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+    'fee_id',
+    'amount',
+    'payment_date',
+    'payment_method',
+    'transaction_id',
+    'note',
+    'received_by',
+    ];
 
     public function fee()
     {

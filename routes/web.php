@@ -5,6 +5,7 @@ use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
 use App\Http\Controllers\backend\ExamController;
 use App\Http\Controllers\backend\FeeController;
+use App\Http\Controllers\backend\FeePaymentController;
 use App\Http\Controllers\backend\ResultController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
@@ -104,3 +105,14 @@ Route::get('/result/marksheet', [ResultController::class, 'marksheet'])->name('r
 
 //Fees Routes
 Route::resource('Fees', FeeController::class);
+Route::delete('/fees/bulk-delete',[FeeController::class, 'bulkDelete'])->name('Fees.bulkDelete');
+
+
+
+Route::get('/fee-payments/create',[FeePaymentController::class, 'create'])->name('FeePayments.create');
+
+Route::post('/fee-payments/store',[FeePaymentController::class, 'store'])->name('FeePayments.store');
+
+Route::get('/fee-payments',[FeePaymentController::class, 'index'])->name('FeePayments.index');
+//get students fee
+Route::get('/get-student-fees',[FeePaymentController::class, 'getFees'])->name('FeePayments.getFees');

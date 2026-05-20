@@ -142,7 +142,7 @@ class FeeController extends Controller
         'payments'
         ])->findOrFail($id);
 
-        return view('backend.Fees.show', compact('fee'));
+        return view('backend.Fees.details', compact('fee'));
     }
 
     /**
@@ -195,5 +195,33 @@ class FeeController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $fees = Fee::where('fee_type', $request->fee_type)
+            ->where('month', $request->month)
+            ->whereHas('student', function($q) use ($request){
+                $q->where('class_id', $request->class_id);
+            })
+            ->get();
+        // Prevent delete if payment exists
+        foreach($fees as $fee){
+
+            if($fee->payments->count() > 0){
+
+                return back()->with(
+                'error',
+                'Some fees already paid.'
+                );
+            }
+        }
+
+        foreach($fees as $fee){
+
+            $fee->delete();
+        }
+
+        return back()->with('success','Fees Deleted Successfully!');
     }
 }

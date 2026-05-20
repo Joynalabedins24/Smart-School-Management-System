@@ -4,10 +4,11 @@
 <form method="POST" action="{{ route('Fees.store') }}">
 @csrf
 <div class="card p-3 col-10 mx-auto">
+    <div>
+        <h3 class="text-center">Class Wise Fee Create</h3>
+    </div>
+
     <div class="row mb-3">
-
-
-
         <div class="col-md-6">
         <!-- Class -->
             <div class="input-group mb-3">

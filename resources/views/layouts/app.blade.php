@@ -87,6 +87,8 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('Fees.create') }}">Fees Generate</a></li>
                                 <li><a class="dropdown-item" href="{{ route('Fees.index') }}">Fees list</a></li>
+                                <li><a class="dropdown-item" href="{{ route('FeePayments.create') }}">Recive Payment</a></li>
+                                <li><a class="dropdown-item" href="{{ route('FeePayments.index') }}">Payment History</a></li>
                             </ul>
                         </li>
 

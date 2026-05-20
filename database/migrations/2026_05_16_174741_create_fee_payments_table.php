@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fee_payments', function (Blueprint $table) {
+        /*Schema::create('fee_payments', function (Blueprint $table) {
         $table->id();
         $table->foreignId('fee_id')
           ->constrained()
@@ -19,6 +19,32 @@ return new class extends Migration
         $table->decimal('amount', 10, 2);
         $table->date('payment_date');
         $table->timestamps();
+        });*/
+
+        Schema::create('fee_payments', function (Blueprint $table) {
+
+        $table->id();
+
+        $table->unsignedBigInteger('fee_id');
+
+        $table->decimal('amount', 10, 2);
+
+        $table->date('payment_date');
+
+        $table->string('payment_method')->nullable();
+
+        $table->string('transaction_id')->nullable();
+
+        $table->unsignedBigInteger('received_by')->nullable();
+
+        $table->text('note')->nullable();
+
+        $table->timestamps();
+
+        $table->foreign('fee_id')
+            ->references('id')
+            ->on('fees')
+            ->onDelete('cascade');
         });
     }
 
