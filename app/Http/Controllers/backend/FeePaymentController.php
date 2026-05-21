@@ -44,7 +44,7 @@ class FeePaymentController extends Controller
         'amount' => 'required|numeric|min:1',
 
     ]);
-
+    $receiptNo = 'REC-' . time();
     // Selected fees
     $fees = Fee::with('payments')
 
@@ -58,6 +58,8 @@ class FeePaymentController extends Controller
 
     // Remaining payment amount
     $remainingAmount = $request->amount;
+
+
 
     foreach($fees as $fee){
 
@@ -101,6 +103,8 @@ class FeePaymentController extends Controller
 
             'fee_id' => $fee->id,
 
+            'receipt_no' => $receiptNo,
+
             'amount' => $payAmount,
 
             'payment_date' => $request->payment_date,
@@ -121,10 +125,7 @@ class FeePaymentController extends Controller
         // Reduce remaining amount
         $remainingAmount -= $payAmount;
     }
-
-        return redirect()
-            ->route('FeePayments.create')
-            ->with('success', 'Payment Received Successfully!');
+        return redirect()->route('FeePayments.receipt',$receiptNo)->with('success', 'Payment Received Successfully!');
     }
 
 
@@ -137,5 +138,51 @@ class FeePaymentController extends Controller
                     ->paginate(10);
 
             return view('backend.FeePayment.index',compact('payments'));
+    }
+
+    public function receipt($receipt_no)
+    {
+        $payments = FeePayment::with([
+                    'fee.student.user',
+                    'fee.student.class'
+                ])
+                ->where('receipt_no', $receipt_no)
+                ->get();
+
+        return view('backend.FeePayment.receipt',compact('payments', 'receipt_no'));
+    }
+
+    public function ledger()
+    {
+        $student_id = Auth::user()->student->id;
+
+        $fees = Fee::with('payments')
+
+                    ->where('student_id', $student_id)
+
+                    ->latest()
+
+                    ->get();
+
+        $totalFees = 0;
+
+        $totalPaid = 0;
+
+        $totalDue = 0;
+
+        foreach($fees as $fee){
+
+            $paid = $fee->payments->sum('amount');
+
+            $due = ($fee->total_amount + $fee->late_fee) - $paid;
+
+            $totalFees += ($fee->total_amount + $fee->late_fee);
+
+            $totalPaid += $paid;
+
+            $totalDue += $due;
+        }
+
+        return view('backend.FeePayment.ledger', compact('fees','totalFees','totalPaid','totalDue'));
     }
 }

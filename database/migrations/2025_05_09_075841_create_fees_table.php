@@ -28,7 +28,7 @@ return new class extends Migration
 
             $table->date('due_date');
 
-            $table->decimal('late_fee', 10, 2);
+            $table->decimal('late_fee', 10, 2)->nullable();
 
             $table->enum('status', [
                     'paid',

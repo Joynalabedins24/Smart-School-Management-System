@@ -25,6 +25,8 @@ return new class extends Migration
 
         $table->id();
 
+        $table->string('receipt_no')->nullable();
+
         $table->unsignedBigInteger('fee_id');
 
         $table->decimal('amount', 10, 2);

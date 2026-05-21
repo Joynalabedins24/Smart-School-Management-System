@@ -114,5 +114,8 @@ Route::get('/fee-payments/create',[FeePaymentController::class, 'create'])->name
 Route::post('/fee-payments/store',[FeePaymentController::class, 'store'])->name('FeePayments.store');
 
 Route::get('/fee-payments',[FeePaymentController::class, 'index'])->name('FeePayments.index');
+Route::get('/fee-payments/receipt/{receipt_no}',[FeePaymentController::class, 'receipt'])->name('FeePayments.receipt');
 //get students fee
 Route::get('/get-student-fees',[FeePaymentController::class, 'getFees'])->name('FeePayments.getFees');
+
+Route::get('/student-ledger',[FeePaymentController::class, 'ledger'])->name('FeePayments.ledger');

@@ -10,6 +10,7 @@ class FeePayment extends Model
     use HasFactory;
     protected $fillable = [
     'fee_id',
+    'receipt_no',
     'amount',
     'payment_date',
     'payment_method',

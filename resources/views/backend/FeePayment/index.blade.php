@@ -43,6 +43,8 @@
 
                             <th>Date</th>
 
+                            <th class="col-2">Receipt </th>
+
                         </tr>
 
                     </thead>
@@ -79,6 +81,11 @@
 
                                 <td>
                                     {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('FeePayments.receipt',$payment->receipt_no) }}"class="btn btn-info btn-sm">
+                                        Receipt {{ $payment->receipt_no ?? 'N/A' }}
+                                    </a>
                                 </td>
 
                             </tr>

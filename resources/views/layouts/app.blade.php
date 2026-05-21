@@ -89,6 +89,7 @@
                                 <li><a class="dropdown-item" href="{{ route('Fees.index') }}">Fees list</a></li>
                                 <li><a class="dropdown-item" href="{{ route('FeePayments.create') }}">Recive Payment</a></li>
                                 <li><a class="dropdown-item" href="{{ route('FeePayments.index') }}">Payment History</a></li>
+                                <li><a class="dropdown-item" href="{{ route('FeePayments.ledger') }}">My Financial Ledger</a></li>
                             </ul>
                         </li>
 
