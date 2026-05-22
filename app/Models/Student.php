@@ -54,6 +54,11 @@ class Student extends Model
         return $this->hasMany(Result::class);
     }
 
+    public function studentSessions()
+    {
+        return $this->hasMany(StudentSession::class);
+    }
+
     // Accessor Example: Full student ID with prefix
     //public function getFullStudentIdAttribute()
     //{
