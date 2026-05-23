@@ -14,7 +14,6 @@ class StudentSession extends Model
     'class_id',
     'section_id',
     'academic_session_id'
-
     ];
 
     public function Student()
@@ -38,6 +37,4 @@ class StudentSession extends Model
     {
         return $this->belongsTo(Section::class);
     }
-
-
 }

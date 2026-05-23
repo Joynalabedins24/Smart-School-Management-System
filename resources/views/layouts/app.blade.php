@@ -48,8 +48,19 @@
                         </li>
 
 
-                        <li>
-                            <a class="nav-link" href="{{ route('teacher.index') }}">Teachers</a>
+
+                        <li class="dropdown">
+                            <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="">
+                               Teachers
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('teacher.index') }}">All Teachers</a></li>
+                                <li><a class="dropdown-item" href="{{ route('TeacherAssignments.index') }}">Teacher's Assignment's</a></li>
+
+
+                            </ul>
+
+
                         </li>
 
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
 use App\Http\Controllers\backend\StudentSessionController;
 use App\Http\Controllers\backend\SubjectController;
+use App\Http\Controllers\backend\TeacherAssignmentController;
 use App\Http\Controllers\backend\TeacherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -130,3 +131,7 @@ Route::put('AcademicSessions/{id}/active',[AcademicSessionController::class, 'ac
 
 //Students Session route
 Route::resource('StudentSessions',StudentSessionController::class);
+
+//Teacher Assignment Session-wise route
+Route::resource('TeacherAssignments', TeacherAssignmentController::class);
+Route::get('/get-subjects/{class_id}', [TeacherAssignmentController::class, 'getSubjects']);

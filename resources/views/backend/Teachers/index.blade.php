@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-    <div class= "bg-gray  col-8 mx-auto mb-2" >
+    <div class= "bg-gray  col-10 mx-auto mb-2" >
         <div> <a class="btn btn-primary" href="{{ route('teacher.create') }}">Add Teacher</a></div>
     </div>
-    <div class="shadow-sm card col-8 mx-auto">
+    <div class="shadow-sm card col-10 mx-auto">
         <div class="card">
             <div class="card-header">
               All Teachers
@@ -36,17 +36,17 @@
 
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-eye"></i></a>
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-pencil"></i></a>
-        
-        
+
+
                                     <button class="btn btn__delete"><i class="fa-solid fa-eraser"></i></button>
                                     <form class="delete__form" action="" method="POST">
-        
+
                                         @csrf
                                         @method('DELETE')
-        
+
                                     </form>
-        
-        
+
+
                                 </div>
                             </td>
                         </tr>
@@ -57,4 +57,4 @@
         </div>
 
     </div>
-@endsection          
+@endsection
