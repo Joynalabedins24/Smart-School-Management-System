@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\backend\AcademicSessionController;
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
 use App\Http\Controllers\backend\ExamController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\backend\FeePaymentController;
 use App\Http\Controllers\backend\ResultController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
+use App\Http\Controllers\backend\StudentSessionController;
 use App\Http\Controllers\backend\SubjectController;
 use App\Http\Controllers\backend\TeacherController;
 use Illuminate\Support\Facades\Auth;
@@ -119,3 +121,12 @@ Route::get('/fee-payments/receipt/{receipt_no}',[FeePaymentController::class, 'r
 Route::get('/get-student-fees',[FeePaymentController::class, 'getFees'])->name('FeePayments.getFees');
 
 Route::get('/student-ledger',[FeePaymentController::class, 'ledger'])->name('FeePayments.ledger');
+
+
+
+//academic Session route
+Route::resource('AcademicSessions',AcademicSessionController::class);
+Route::put('AcademicSessions/{id}/active',[AcademicSessionController::class, 'active'])->name('AcademicSessions.active');
+
+//Students Session route
+Route::resource('StudentSessions',StudentSessionController::class);

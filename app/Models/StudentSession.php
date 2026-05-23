@@ -9,6 +9,12 @@ class StudentSession extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+    'student_id',
+    'class_id',
+    'academic_session_id'
+
+    ];
 
     public function Student()
     {
@@ -18,13 +24,13 @@ class StudentSession extends Model
 
     public function class()
     {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(Classe::class, 'class_id');
     }
 
 
     public function academicSession()
     {
-        return $this->belongsTo(AcademicSession::class);
+        return $this->belongsTo(AcademicSession::class,'academic_session_id');
     }
 
 

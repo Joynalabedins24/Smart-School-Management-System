@@ -37,12 +37,22 @@
                     <!-- Left Side Of Navbar -->
                     @auth
                     <ul class="navbar-nav me-auto">
-                        <li>
-                            <a class="nav-link" href="{{ route('student.index') }}">Students</a>
+                        <li class="dropdown">
+                            <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="{{ route('student.index') }}">
+                               Students
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('student.index') }}">All Students</a></li>
+                                <li><a class="dropdown-item" href="{{ route('StudentSessions.index') }}">Student's Session's</a></li>
+                            </ul>
                         </li>
+
+
                         <li>
                             <a class="nav-link" href="{{ route('teacher.index') }}">Teachers</a>
                         </li>
+
+
                         <li class="dropdown">
                             <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="">
                                School Materials
@@ -52,6 +62,7 @@
                                 <li><a class="dropdown-item" href="{{ route('classe.index') }}">Classes</a></li>
                                 <li><a class="dropdown-item" href="{{ route('section.index') }}">Sections</a></li>
                                 <li><a class="dropdown-item" href="{{ route('exams.index') }}">Exams</a></li>
+                                <li><a class="dropdown-item" href="{{ route('AcademicSessions.index') }}">Sessions</a></li>
 
                             </ul>
 

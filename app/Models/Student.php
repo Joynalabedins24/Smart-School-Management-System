@@ -59,6 +59,11 @@ class Student extends Model
         return $this->hasMany(StudentSession::class);
     }
 
+    public function currentSession()
+    {
+        return $this->hasOne(StudentSession::class)->latestOfMany();
+    }
+
     // Accessor Example: Full student ID with prefix
     //public function getFullStudentIdAttribute()
     //{

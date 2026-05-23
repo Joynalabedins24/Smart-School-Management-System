@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class AcademicSession extends Model
 {
     use HasFactory;
+    protected $fillable = [
+    'name',
+    'is_active'
+    ];
+
+    public function studentSessions()
+    {
+        return $this->hasMany(StudentSession::class);
+    }
 }
