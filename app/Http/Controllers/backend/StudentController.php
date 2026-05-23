@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Classe;
 use App\Models\Section;
 use App\Models\Student;
+use App\Models\StudentSession;
 use App\Models\Teacher;
-//use auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -35,8 +35,8 @@ class StudentController extends Controller
     }
 
     function index(Request $request){
-        $query  = Student::with(['user', 'class', 'section']);
 
+        $query  = Student::with(['user', 'currentSession']);
 
         // Search
         if ($request->search) {
@@ -46,10 +46,10 @@ class StudentController extends Controller
               });
         }
 
-
-        // Filter by class
         if ($request->class_id) {
-            $query->where('class_id', $request->class_id);
+            $query->whereHas('currentSession', function ($q) use ($request) {
+                $q->where('class_id', $request->class_id);
+            });
         }
 
         $students = $query->paginate(10);
@@ -86,7 +86,6 @@ class StudentController extends Controller
         else{
             //Generate Student ID
             //find last student id
-            //$lastStudent = Student::orderBy('created_at', 'desc')->first();
             $lastStudent = Student::latest()->first();
             //return  $lastStudent->student_id ;
             if ($lastStudent) {
@@ -96,37 +95,57 @@ class StudentController extends Controller
             } else {
             $newIdNumber = 1;
             }
-            $newStudentId = 'std_' . str_pad($newIdNumber, 5, '0', STR_PAD_LEFT); // e.g., STD-00010
+            $newStudentId = 'std_' . str_pad($newIdNumber, 5, '0', STR_PAD_LEFT);
 
-            $student = new Student();
-            $student->user_id = auth::user()->id;
-            $student->student_id = $newStudentId;
-            $student->dob = $request->dob;
-            $student->gender = $request->gender;
-            $student->class_id = $request->class_id;
-            $student->section_id = $request->section_id;
-            $student->admission_date = $request->doa;
-            $student->guardian_name = $request->gName;
-            $student->guardian_phone = $request->gPhone;
-            $student->address = $request->address;
-            $student->save();
+            $student = Student::create([
+            'user_id'          => Auth::user()->id,
+            'student_id'       => $newStudentId,
+            'dob'              => $request->dob,
+            'gender'           => $request->gender,
+            'admission_date'   => $request->doa,
+            'guardian_name'    => $request->gName,
+            'guardian_phone'   => $request->gPhone,
+            'address'          => $request->address
+            ]);
+
+            StudentSession::create([
+            'student_id'            => $student->id,
+            'class_id'              => $request->class_id,
+            'section_id'            => $request->section_id,
+            'academic_session_id'   => activeSession()->id,
+            ]);
 
             //database insertion
             return redirect()->route('student.index')->with('success','Information Updated Successfully!');
-            }
+        }
 
     }
 
+
+    //public function edit($id)
+    //{
+    //    $student = Student::findOrFail($id);
+    //    $classes = Classe::all();
+    //    $sections = Section::where('class_id',$student->class_id)->get();
+
+    //    return view('backend.Students.edit', compact('student','classes','sections'));
+    //}
 
     public function edit($id)
     {
-        $student = Student::findOrFail($id);
+        $student = Student::with([
+                    'currentSession.class',
+                    'currentSession.section'
+                ])->findOrFail($id);
+
         $classes = Classe::all();
-        $sections = Section::where('class_id',$student->class_id)->get();
 
-        return view('backend.Students.edit', compact('student','classes','sections'));
+        $sections = Section::all();
+
+        $session = $student->currentSession;
+
+        return view('backend.Students.edit',compact('student','classes','sections','session'));
     }
-
 
 
     public function update(Request $request, $id)
@@ -136,13 +155,27 @@ class StudentController extends Controller
         $student->update([
             'dob' => $request->dob,
             'gender' => $request->gender,
-            'class_id' => $request->class_id,
-            'section_id' => $request->section_id,
+            //'class_id' => $request->class_id,
+            //'section_id' => $request->section_id,
             'admission_date' => $request->doa,
             'guardian_name' => $request->gName,
             'guardian_phone' => $request->gPhone,
             'address' => $request->address
         ]);
+
+        // Current Session Update
+        $studentSession = $student->currentSession;
+
+        if($studentSession)
+        {
+            $studentSession->update([
+
+                'class_id' => $request->class_id,
+
+                'section_id' => $request->section_id,
+
+            ]);
+        }
 
         return redirect()->route('student.index')->with('success','Updated!');
     }

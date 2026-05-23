@@ -46,19 +46,15 @@ class StudentSessionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
             'student_id' => 'required',
-
             'class_id' => 'required',
-
+            'section_id' => 'required'
         ]);
 
         $exists = StudentSession::where('student_id',$request->student_id)
                                 ->where('academic_session_id',activeSession()->id)
                                 ->exists();
-
         if($exists){
-
             return redirect()->back()->with('error','Student already assigned!');
         }
 
@@ -66,6 +62,7 @@ class StudentSessionController extends Controller
 
             'student_id' => $request->student_id,
             'class_id' => $request->class_id,
+            'section_id' => $request->section_id,
             'academic_session_id' => activeSession()->id,
 
         ]);

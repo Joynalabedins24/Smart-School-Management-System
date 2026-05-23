@@ -11,14 +11,14 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'student_id',
-        'dob',
-        'gender',
-        'class_id',
-        'section_id',
-        'admission_date',
-        'guardian_name',
+    'user_id',
+    'student_id',
+    'dob',
+    'gender',
+    'admission_date',
+    'guardian_name',
+    'guardian_phone',
+    'address'
     ];
 
     protected $casts = [
@@ -36,7 +36,7 @@ class Student extends Model
 
     public function class()
     {
-        return $this->belongsTo(Classe::class, 'class_id'); // Assuming model name is SchoolClass
+        return $this->belongsTo(Classe::class, 'class_id');
     }
 
     public function section()
@@ -69,5 +69,4 @@ class Student extends Model
     //{
     //    return 'STD-' . $this->student_id;
     //}
-
 }

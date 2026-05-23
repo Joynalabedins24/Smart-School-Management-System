@@ -67,7 +67,7 @@
             <select name="class_id" id="class_id" class="form-select">
                 @foreach($classes as $class)
                     <option value="{{ $class->id }}"
-                        {{ $student->class_id == $class->id ? 'selected' : '' }}>
+                        {{ $session->class->id  == $class->id ? 'selected' : '' }}>
                         {{ $class->name }}
                     </option>
                 @endforeach
@@ -76,14 +76,10 @@
 
         <!-- Section -->
         <div class="col-md-6">
+            <input type="hidden" id="current_section_id" value="{{ $session->section_id }}">
             <label class="form-label">Section</label>
             <select name="section_id" id="section_id" class="form-select">
-                @foreach($sections as $section)
-                    <option value="{{ $section->id }}"
-                        {{ $student->section_id == $section->id ? 'selected' : '' }}>
-                        {{ $section->name }}
-                    </option>
-                @endforeach
+                <option value="{{ $session->section->id}}"></option>
             </select>
         </div>
 
@@ -122,24 +118,61 @@
 {{-- AJAX Section Load --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-$('#class_id').on('change', function () {
-    var classId = $(this).val();
 
-    if (classId) {
+<script>
+    $(document).ready(function(){
+
+    $('#class_id').trigger('change');
+
+    });
+</script>
+
+<script>
+
+function loadSections(classId)
+{
+    let current_section_id =
+        $('#current_section_id').val();
+    if (classId)
+    {
         $.ajax({
             url: '/get-sections/' + classId,
             type: 'GET',
-            success: function (data) {
+            success: function (data)
+            {
                 $('#section_id').empty();
-
-                $.each(data, function (key, section) {
-                    $('#section_id').append('<option value="'+section.id+'">'+section.name+'</option>');
+                $('#section_id').append(
+                    '<option value="">Select Section</option>'
+                );
+                $.each(data, function (key, section)
+                {
+                    let selected = '';
+                    if(section.id == current_section_id)
+                    {
+                        selected = 'selected';
+                    }
+                    $('#section_id').append(
+                        '<option value="'+section.id+'" '+selected+'>'+
+                        section.name+
+                        '</option>'
+                    );
                 });
             }
         });
     }
-});
-</script>
+}
 
+$(document).ready(function(){
+
+    loadSections($('#class_id').val());
+
+});
+
+$('#class_id').on('change', function () {
+
+    loadSections($(this).val());
+
+});
+
+</script>
 @endsection
