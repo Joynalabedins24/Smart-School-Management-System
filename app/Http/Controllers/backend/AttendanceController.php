@@ -7,6 +7,7 @@ use App\Models\Attendances;
 use App\Models\Classe;
 use App\Models\Section;
 use App\Models\Student;
+use App\Models\StudentSession;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,61 +26,91 @@ class AttendanceController extends Controller
 
     public function getStudents($class_id, $section_id = null)
     {
-        $students = Student::with('user')
-                ->where('class_id', $class_id)
-                ->when($section_id, function ($query) use ($section_id) {
-                    $query->where('section_id', $section_id);
-                })
+        $students = StudentSession::with(['student.user'])
+                    ->where('academic_session_id', activeSession()->id)
+                    ->where('class_id',$class_id)
+                    ->when($section_id, function ($query) use ($section_id) {
+                        $query->where('section_id',$section_id
+                        );
+                    })
+                    ->get();
+
+        return response()->json($students);
+    }
+
+
+    public function getStudentsForEdit(
+    $class_id,
+    $section_id,
+    $date
+)
+{
+    $students = StudentSession::with([
+                    'student.user'
+                ])
+                ->where(
+                    'academic_session_id',
+                    activeSession()->id
+                )
+                ->where(
+                    'class_id',
+                    $class_id
+                )
+                ->where(
+                    'section_id',
+                    $section_id
+                )
                 ->get();
 
-        return response()->json($students);
-    }
-
-
-    public function getStudentsForEdit($class_id, $section_id, $date)
+    foreach ($students as $student)
     {
-        $students = Student::with('user')
-            ->where('class_id', $class_id)
-            ->where('section_id', $section_id)
-            ->get();
+        $attendance = Attendances::where(
+                            'student_session_id',
+                            $student->id
+                        )
+                        ->where(
+                            'date',
+                            $date
+                        )
+                        ->first();
 
-        foreach ($students as $student) {
-            $attendance = Attendances::where('student_id', $student->id)
-                ->where('date', $date)
-                ->first();
+        $student->status =
+            $attendance->status ?? null;
 
-            $student->status = $attendance->status ?? null;
-            $student->remarks = $attendance->remarks ?? null;
-        }
-
-        return response()->json($students);
+        $student->remarks =
+            $attendance->remarks ?? null;
     }
+
+    return response()->json($students);
+}
+
+
 
 
 
     public function store(Request $request)
     {
-        foreach ($request->students as $studentId => $data) {
-            $request->validate(
-                [
-                    'date' => 'required|date',
-                    'students' => 'required|array'
-                ]
-            );
+        $request->validate([
+            'date' => 'required|date',
+            'students' => 'required|array'
+        ]);
 
+        foreach ($request->students as $studentSessionId => $data)
+        {
             Attendances::updateOrCreate(
                 [
-                    'student_id' => $studentId,
-                    'date' => $request->date
+                'student_session_id' => $studentSessionId,
+                'date' => $request->date
                 ],
+
                 [
-                    'status' => isset($data['status']) ? 'present' : 'absent',
-                    'remarks' => $data['remarks'] ?? null
+                'status' => isset($data['status']) ? 'present' : 'absent',
+                'remarks' => $data['remarks'] ?? null
                 ]
             );
         }
 
-        return back()->with('success', 'Attendance Saved');
+        return back()->with('success', 'Attendance Saved Successfully!');
     }
 
 

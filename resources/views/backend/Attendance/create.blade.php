@@ -9,22 +9,29 @@
 
     <form method="POST" action="{{ route('attendance.store') }}">
         @csrf
+        <div class="row">
 
-        <!-- Date -->
-        <input type="date"id ="date" name="date" class="form-control mb-3" required>
+            <div class="col-4">
+                <!-- Date -->
+                <input type="date"id ="date" name="date" class="form-control mb-3 col-4" required>
+            </div>
+            <div class="col-4">
+                <!- - Class -->
+                <select id="class_id" name="class_id" class="form-control mb-3 col-4">
+                    <option>Select Class</option>
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-4">
+                <!-- Section -->
+                <select id="section_id" class="form-control mb-3 col-4">
+                    <option>Select Section</option>
+                </select>
+            </div>
 
-        <!-- Class -->
-        <select id="class_id" name="class_id" class="form-control mb-3">
-            <option>Select Class</option>
-            @foreach($classes as $class)
-                <option value="{{ $class->id }}">{{ $class->name }}</option>
-            @endforeach
-        </select>
-
-        <!-- Section -->
-        <select id="section_id" class="form-control mb-3">
-            <option>Select Section</option>
-        </select>
+        </div>
 
         <!-- Students List -->
         <div class="card" style="background-color:#ececec;">
@@ -63,21 +70,25 @@ $('#class_id').on('change', function () {
 });
 </script>
 <script>
-document.getElementById('section_id').addEventListener('change', function () {
 
-    let classId = document.getElementById('class_id').value;
-    let date = document.getElementById('date').value;
+document.getElementById('section_id')
+.addEventListener('change', function () {
+    let classId =
+        document.getElementById('class_id').value;
+    let date =
+        document.getElementById('date').value;
     let sectionId = this.value;
 
-    if (!classId || !sectionId) {
-        document.getElementById('student_list').innerHTML = "";
+    if (!classId || !sectionId)
+    {
+        document.getElementById(
+            'student_list'
+        ).innerHTML = "";
         return;
     }
-
     fetch(`/get-students-edit/${classId}/${sectionId}/${date}`)
         .then(res => res.json())
         .then(data => {
-
             let html = `
             <table class="table table-bordered table-hover">
                 <thead class="table-dark">
@@ -91,43 +102,45 @@ document.getElementById('section_id').addEventListener('change', function () {
                 </thead>
                 <tbody>
             `;
-
             data.forEach((student, index) => {
-                let checked = (student.status === 'present') ? 'checked' : '';
+                let checked =
+                    (student.status === 'present')
+                    ? 'checked'
+                    : '';
                 html += `
                 <tr>
                     <td>${index + 1}</td>
-
-                    <td>${student.user.name}</td>
-
-                    <td>${student.student_id}</td>
-
+                    <td>
+                        ${student.student.user.name}
+                    </td>
+                    <td>
+                        ${student.student.student_id}
+                    </td>
                     <td>
                         <label class="switch">
                             <input type="checkbox"
                                    name="students[${student.id}][status]"
-                                   value="present" ${checked} >
+                                   value="present"
+                                   ${checked} >
                             <span class="slider round"></span>
                         </label>
                     </td>
-
                     <td>
                         <input type="text"
                                name="students[${student.id}][remarks]"
                                class="form-control"
+                               value="${student.remarks ?? ''}"
                                placeholder="Optional">
                     </td>
                 </tr>
                 `;
             });
-
             html += `</tbody></table>`;
-
-            document.getElementById('student_list').innerHTML = html;
+            document.getElementById(
+                'student_list'
+            ).innerHTML = html;
         });
-
 });
 </script>
-
 
 @endsection

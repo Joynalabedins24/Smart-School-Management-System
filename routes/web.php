@@ -80,8 +80,7 @@ Route::get('/attendance', [AttendanceController::class, 'create'])->name('attend
 Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
 
 Route::get('/get-students/{class_id}/{section_id?}', [AttendanceController::class, 'getStudents']);
-Route::get('/get-students-edit/{class_id}/{section_id}/{date}',
-    [AttendanceController::class, 'getStudentsForEdit']);
+Route::get('/get-students-edit/{class_id}/{section_id}/{date}',[AttendanceController::class, 'getStudentsForEdit']);
 Route::get('/attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
 Route::get('/attendance/edit', [AttendanceController::class, 'edit'])->name('attendance.edit');
 Route::get('/attendance/monthly-report', [AttendanceController::class, 'monthlyReport'])
