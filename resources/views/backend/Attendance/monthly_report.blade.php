@@ -2,7 +2,7 @@
 
 
 @section('content')
-<div id="printArea" class="card p-3 col-10 mx-auto">
+<div class="card p-3 col-10 mx-auto">
     <!-- FILTER FORM -->
     <form method="GET" action="{{ route('attendance.monthlyReport') }}" class="row mb-3">
 
@@ -32,6 +32,18 @@
     </form>
 </div>
 <div id="printArea" class="card p-3 col-10 mx-auto">
+    <div class="text-center mb-4">
+
+        <h1>Your School Name</h1>
+
+        <p>School Address Here</p>
+
+        <h5 class="mt-2">
+            ATTENDANCE REPORT
+        </h5>
+        <p>Session : {{ $currentSession->name ?? '' }}</p>
+
+    </div>
 
     <div class="row text-primary">
 
@@ -70,7 +82,7 @@
     @foreach($students as $key => $student)
         <tr>
             <td>{{ $key + 1 }}</td>
-            <td>{{ $student->user->name }}</td>
+            <td>{{ $student->student->user->name }}</td>
             <td>{{ $student->present }}</td>
             <td>{{ $student->absent }}</td>
 

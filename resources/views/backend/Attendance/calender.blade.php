@@ -21,6 +21,7 @@
                 {{ $currentMonth->format('F Y') }}
             </h5>
 
+
             <!-- Next -->
             @if($currentMonth->lt(now()))
             <a href="{{ route('attendance.calendar', ['id' => $student->id, 'month' => $nextMonth]) }}"

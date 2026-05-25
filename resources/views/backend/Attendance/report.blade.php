@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="card p-3 col-10 mx-auto">
-
     <!-- FILTER FORM -->
     <form method="GET" action="{{ route('attendance.report') }}" class="row mb-3">
 
@@ -31,9 +29,23 @@
         </div>
 
     </form>
+</div>
 
+<div  class="card p-3 col-10 mx-auto">
+    <div id="printArea">
+    <div class="text-center mb-4">
 
-    <div class="row">
+        <h1>Your School Name</h1>
+
+        <p>School Address Here</p>
+
+        <h5 class="mt-3">
+            ATTENDANCE REPORT
+        </h5>
+        <p>Session : {{ $currentSession->name ?? '' }}</p>
+
+    </div>
+    <div class="d-flex justify-content-between">
 
         <div class="col text-start m-2">
             Date: {{ \Carbon\Carbon::parse($date)->format('jS F Y') }}
@@ -59,7 +71,7 @@
 
         </div>
 
-        <div class="col text-end m-2">
+        <div class="col text-center m-2">
             <strong>Absent : {{ $absent ?? '' }}</strong>
 
         </div>
@@ -97,8 +109,8 @@
 
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $student->user->name }}</td>
-                <td>{{ $student->student_id }}</td>
+                <td>{{ $student->student->user->name }}</td>
+                <td>{{ $student->student->student_id }}</td>
 
                 <td>
                     @if($attendance && $attendance->status == 'present')
@@ -120,19 +132,15 @@
     @else
         <p class="text-center text-muted">No data found</p>
     @endif
-    <div class="d-flex flex-row-reverse">
-        <div class="col-md-2">
-            <a href="{{ route('attendance.pdf', [
-                    'class_id' => request('class_id'),
-                    'section_id' => request('section_id'),
-                    'date' => request('date')
-                    ]) }}"
-                class="btn btn-danger w-100">
-                Download PDF
-            </a>
-        </div>
-    </div>
+</div>
+</div>
+<div class="col-11 d-flex flex-row-reverse mt-2">
+    <div class="col-md-2">
 
+        <button onclick="window.print()" class="btn btn-primary w-100">
+            🖨️ Print Report
+        </button>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

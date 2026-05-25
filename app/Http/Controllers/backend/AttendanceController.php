@@ -117,49 +117,52 @@ class AttendanceController extends Controller
     public function report(Request $request)
     {
         $classes = Classe::all();
-
         $classe = null;
         $section = null;
         $date = $request->date;
-
+        //Session Name
+        $currentSession = activeSession();
         $students = [];
-        //new lines
         $present = 0;
         $absent = 0;
         $totalStudent = 0;
         $percentage = 0;
+        if ( $request->date && $request->class_id && $request->section_id )
+        {
+        // class info
+        $classe = Classe::find(
+            $request->class_id
+        );
+        // section info
+        $section = Section::find(
+            $request->section_id
+        );
+        // session students
+        $students = StudentSession::with(['student.user','attendances' => function ($q) use ($request)
+                                            {
+                                                $q->where('date',$request->date);
+                                            }
+                                        ])  ->where('academic_session_id', activeSession()->id)
+                                            ->where('class_id',$request->class_id)
+                                            ->where('section_id',$request->section_id)
+                                            ->get();
+        // total student
+        $totalStudent = $students->count();
+        // present count
+        $present = Attendances::whereIn('student_session_id', $students->pluck('id'))
+                                ->where('date',$request->date)
+                                ->where('status','present')
+                                ->count();
+        // absent
+        $absent = $totalStudent - $present;
 
-        if ($request->date && $request->class_id && $request->section_id) {
-
-        $studentIds = Student::where('class_id', $request->class_id)
-        ->where('section_id', $request->section_id)
-        ->pluck('id');
-
-        $present = Attendances::where('date', $request->date)
-        ->whereIn('student_id', $studentIds)
-        ->where('status', 'present')
-        ->count();
-        $totalStudent = $studentIds->count();
-        $absent = $totalStudent - $present ;
-        $percentage = round(($present / $totalStudent) * 100);
+        // percentage
+        $percentage = $totalStudent > 0 ? round(($present / $totalStudent) * 100) : 0;
         }
 
-        //new lines
-        if ($request->date && $request->class_id && $request->section_id) {
-
-            $classe = Classe::find($request->class_id);
-            $section = Section::find($request->section_id);
-
-            $students = Student::with(['user', 'attendances' => function ($q) use ($request) {
-                $q->where('date', $request->date);
-            }])
-            ->where('class_id', $request->class_id)
-            ->where('section_id', $request->section_id)
-            ->get();
-        }
-
-        return view('backend.Attendance.report', compact('classes', 'students','classe','section',
-        'date','present','absent','totalStudent','percentage'));
+        return view('backend.Attendance.report', compact('classes','students','classe','section',
+                                                        'date','present','absent','totalStudent',
+                                                        'percentage','currentSession'));
     }
 
 
@@ -230,73 +233,141 @@ class AttendanceController extends Controller
         $classes = Classe::all();
         $class_id = $request->class_id;
         $section_id = $request->section_id;
-        $month = $request->month; // format: 2026-05
+        $month = $request->month;
+        $currentSession = activeSession();
         $classe = null;
         $section = null;
         $students = [];
         $formattedMonth = null;
-
-        if ($class_id && $section_id && $month) {
-            $classe = Classe::find($request->class_id);
-            $section = Section::find($request->section_id);
+        if ( $class_id && $section_id && $month)
+        {
+            // class
+            $classe = Classe::find($class_id);
+            // section
+            $section = Section::find($section_id);
+            // format month
+            $formattedMonth =\Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y');
+            // month number
             $monthNumber = date('m', strtotime($month));
 
-            $formattedMonth = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y');
-
-            $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+            // year
             $year = date('Y', strtotime($month));
+            // session students
+            $students = StudentSession::with(['student.user'])
+                                        ->where('academic_session_id', activeSession()->id )
+                                        ->where('class_id', $class_id )
+                                        ->where('section_id', $section_id )
+                                        ->get();
 
-            $students = Student::with('user')
-                ->where('class_id', $class_id)
-                ->where('section_id', $section_id)
-                ->get();
-
-            foreach ($students as $student) {
-
-                $present = Attendances::where('student_id', $student->id)
-                    ->whereMonth('date', $monthNumber)
-                    ->whereYear('date', $year)
-                    ->where('status', 'present')
-                    ->count();
-
-                $total = Attendances::where('student_id', $student->id)
-                    ->whereMonth('date', $monthNumber)
-                    ->whereYear('date', $year)
-                    ->count();
-
+            // attendance calculation
+            foreach ($students as $student)
+            {
+                $present = Attendances::where('student_session_id',$student->id)
+                                        ->whereMonth('date',$monthNumber)
+                                        ->whereYear('date', $year )
+                                        ->where('status','present')
+                                        ->count();
+                $total = Attendances::where('student_session_id',$student->id)
+                                        ->whereMonth('date', $monthNumber)
+                                        ->whereYear('date', $year)
+                                        ->count();
                 $student->present = $present;
+
                 $student->absent = $total - $present;
-                $student->percentage = $total > 0 ? round(($present / $total) * 100) : 0;
+
+                $student->percentage = $total > 0 ? round( ($present / $total) * 100 ): 0;
             }
         }
-
-        return view('backend.Attendance.monthly_report', compact('students','classes','classe','section','formattedMonth'));
+        return view('backend.Attendance.monthly_report',compact('students','classes','classe','section','formattedMonth','currentSession'));
     }
 
 
 
-    public function studentCalendar(Request $request, $student_id = null)
+   public function studentCalendar(
+    Request $request,
+    $student_id = null
+)
+{
+    // student user
+    if (Auth::user()->student)
     {
-    // যদি user student হয়
-    if (Auth::user()->student) {
-        $student = Auth::user()->student;
-    } else {
-        // admin/teacher হলে id লাগবে
-        $student = Student::with('user')->findOrFail($student_id);
+        $student =
+            Auth::user()->student;
+    }
+    else
+    {
+        $student = Student::with(
+                        'user'
+                    )->findOrFail(
+                        $student_id
+                    );
     }
 
-    $month = $request->month ?? date('Y-m');
+    // current month
+    $month =
+        $request->month
+        ?? date('Y-m');
 
-    $start = Carbon::parse($month)->startOfMonth();
-    $end = Carbon::parse($month)->endOfMonth();
+    $start =
+        Carbon::parse($month)
+        ->startOfMonth();
 
-    $attendances = Attendances::where('student_id', $student->id)
-        ->whereBetween('date', [$start, $end])
-        ->get()
-        ->keyBy(function ($item) {
-            return Carbon::parse($item->date)->format('Y-m-d');
-        });
+    $end =
+        Carbon::parse($month)
+        ->endOfMonth();
 
-    return view('backend.Attendance.calender', compact('student','attendances','month'));
-    }
+
+    // active student session
+    $studentSession = StudentSession::where(
+
+                            'student_id',
+                            $student->id
+
+                        )
+
+                        ->where(
+
+                            'academic_session_id',
+                            activeSession()->id
+
+                        )
+
+                        ->first();
+
+    // attendance data
+    $attendances = Attendances::where(
+
+                        'student_session_id',
+                        $studentSession->id
+
+                    )
+
+                    ->whereBetween(
+                        'date',
+                        [$start, $end]
+                    )
+
+                    ->get()
+
+                    ->keyBy(function ($item) {
+
+                        return Carbon::parse(
+                                    $item->date
+                                )->format(
+                                    'Y-m-d'
+                                );
+                    });
+
+
+    return view(
+        'backend.Attendance.calender',
+        compact(
+
+            'student',
+            'attendances',
+            'month'
+
+        )
+    );
+}
 }

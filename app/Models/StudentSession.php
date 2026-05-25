@@ -37,4 +37,9 @@ class StudentSession extends Model
     {
         return $this->belongsTo(Section::class);
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendances::class,'student_session_id');
+    }
 }

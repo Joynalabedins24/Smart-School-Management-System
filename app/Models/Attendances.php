@@ -20,4 +20,9 @@ class Attendances extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    public function studentSession()
+    {
+        return $this->belongsTo(StudentSession::class,'student_session_id');
+    }
 }
