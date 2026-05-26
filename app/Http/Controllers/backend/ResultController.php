@@ -7,6 +7,7 @@ use App\Models\Classe;
 use App\Models\Exam;
 use App\Models\Result;
 use App\Models\Student;
+use App\Models\StudentSession;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +23,13 @@ class ResultController extends Controller
     }
 
 
-    public function getExams($class_id){
-        $exams = Exam::where('class_id', $class_id)->get();
+   public function getExams($class_id)
+    {
+        $exams = Exam::where('class_id', $class_id)
+                    ->where('academic_session_id',activeSession()->id)
+                    ->get();
         return response()->json($exams);
-    }
+}
 
 
 
@@ -41,31 +45,30 @@ class ResultController extends Controller
 
     public function getSubjectsByClass($classId){
         $subjects   = Subject::where('class_id', $classId)
-                    ->get(['id', 'name']);
+                            ->get(['id', 'name']);
         return response()->json($subjects);
     }
 
 
     public function getStudentsForResult($class_id, $exam_id, $subject_id)
     {
-        $students = Student::with('user')
-            ->where('class_id', $class_id)
-            //->where('section_id', $section_id)
-            ->get();
+        $students = StudentSession::with(['student.user'])
+                                ->where('academic_session_id',activeSession()->id)
+                                ->where('class_id',$class_id)
+                                ->get();
+        foreach ($students as $student)
+        {
+            $result = Result::where('student_session_id',$student->id)
+                            ->where('exam_id',$exam_id)
+                            ->where('subject_id',$subject_id)
+                            ->first();
 
-        foreach ($students as $student) {
-            $result = Result::where('student_id', $student->id)
-                ->where('exam_id', $exam_id)
-                ->where('subject_id', $subject_id)
-                ->first();
-
-            $student->marks = $result->marks ?? " ";
-            $student->grade = $result->grade ?? " ";
+            $student->marks = $result->marks ?? '';
+            $student->grade = $result->grade ?? '';
         }
 
         return response()->json($students);
     }
-
 
 
 

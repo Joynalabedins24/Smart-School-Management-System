@@ -151,9 +151,9 @@ document.getElementById('subject_id').addEventListener('change', function () {
                 <tr>
                     <td>${index + 1}</td>
 
-                    <td>${student.user.name}</td>
+                    <td>${student.student.user.name}</td>
 
-                    <td>${student.student_id}</td>
+                    <td>${student.student.student_id}</td>
 
                     <td>
                         <input  type="number"

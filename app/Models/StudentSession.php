@@ -42,4 +42,9 @@ class StudentSession extends Model
     {
         return $this->hasMany(Attendances::class,'student_session_id');
     }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class,'student_session_id');
+    }
 }
