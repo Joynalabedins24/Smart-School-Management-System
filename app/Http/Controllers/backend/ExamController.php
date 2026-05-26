@@ -12,7 +12,9 @@ class ExamController extends Controller
     public function index()
     {
         $classes = Classe::all();
-        $exams = Exam::with('classe')->paginate(10);
+        $exams = Exam::with('classe')
+                    ->where('academic_session_id', activeSession()->id)
+                    ->paginate(10);
         return view('backend.Exam.index', compact('exams','classes'));
     }
 
@@ -40,6 +42,7 @@ class ExamController extends Controller
         $exam->start_date = $request->startDate;
         $exam->end_date  = $request->endDate;
         $exam->class_id  = $request->ClasseName;
+        $exam->academic_session_id = activeSession()->id;
         $exam->save();
         return redirect()->route('exams.index')->with('success', 'Exam created');
     }

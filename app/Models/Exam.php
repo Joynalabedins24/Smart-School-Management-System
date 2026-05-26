@@ -26,4 +26,9 @@ class Exam extends Model
         return $this->belongsTo(Classe::class, 'class_id');
     }
 
+    public function academicSession()
+    {
+        return $this->belongsTo(AcademicSession::class,'academic_session_id');
+    }
+
 }

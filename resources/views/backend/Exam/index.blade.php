@@ -25,6 +25,7 @@
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
                         <th scope="col">classe</th>
+                        <th scope="col">Session</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -36,6 +37,11 @@
                             <td>{{ \Carbon\Carbon::parse($exam->start_date)->format('jS F Y') }}</td>
                             <td>{{ \Carbon\Carbon::parse($exam->end_date)->format('jS F Y') }}</td>
                             <td>{{ $exam->classe->name ?? '' }}</td>
+                            @if($key == 0)
+                            <th rowspan="{{ $exams->count() }}" class="align-middle border" >
+                                {{ $exam->academicSession->name ?? '' }}
+                            </th>
+                            @endif
                             <td>
                                 <div class="btn-group">
 
