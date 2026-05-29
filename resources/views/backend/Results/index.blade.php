@@ -95,8 +95,8 @@
         @foreach($results as $key => $result)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $result->student->user->name }}</td>
-                <td>{{ $result->student->student_id }}</td>
+                <td>{{ $result->studentSession->student->user->name }}</td>
+                <td>{{ $result->studentSession->student->student_id }}</td>
 
                 <td>
                     @if($result)

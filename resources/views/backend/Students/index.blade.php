@@ -53,10 +53,10 @@
                         @foreach($students as $key => $student)
                         <tr>
                             <th scope="row">{{$key + 1}}</th>
-                            <td>{{ $student->user->name }}</td>
-                            <td>{{ $student->student_id }}</td>
-                            <td>{{ $student->dob->age }}</td>
-                            <td>{{ $student->admission_date }}</td>
+                            <td>{{ $student->student->user->name }}</td>
+                            <td>{{ $student->student->student_id }}</td>
+                            <td>{{ $student->student->dob->age }}</td>
+                            <td>{{ $student->student->admission_date }}</td>
                             <td>@if($student->status)
                                     <span class="badge bg-success">Active</span>
                                 @else

@@ -2,7 +2,7 @@
 @section('content')
 <div class="shadow-sm card col-5 mx-auto p-3">
     <form action="{{ route('subject.store')}}" method="POST" class="row g-3 needs-validation" novalidate>
-      @csrf  
+      @csrf
         <!--Subject_name-->
         <div class="col-md-">
           <label for="validationCustom01" class="form-label">Subject Name</label>
@@ -26,7 +26,7 @@
             <option selected disabled value="{{ old('class_id') }}">Choose...</option>
             @foreach ($classes  as $class )
               <option value="{{ $class->id }}">{{ $class->name }}</option>
-            @endforeach      
+            @endforeach
             </select>
             <div class="invalid-feedback">
               Please enter your Date of birth
@@ -36,25 +36,6 @@
               {{ $message }}
               @enderror
             </div>
-          </div>
-        </div>
-
-        <!-- Teacher  -->
-        <div class="col-md-">
-          <label for="validationCustom03" class="form-label"> Teacher </label>
-          <select class="form-select select2" name="Teacher_id"  id="Teacher_id" required>
-            <option selected disabled value="{{ old('Teacher_id') }}">Choose...</option>
-            @foreach ($teachers  as $teacher )
-              <option value="{{ $teacher->id }}">{{ $teacher->user->name }}</option>
-            @endforeach      
-          </select>
-          <div class="invalid-feedback">
-            Please enter The Date of your admission
-          </div>
-          <div class="text-danger">
-            @error('Teacher_id')
-            {{ $message }}
-            @enderror
           </div>
         </div>
 

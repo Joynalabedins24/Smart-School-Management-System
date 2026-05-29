@@ -169,7 +169,7 @@ $('#class_id').on('change', function () {
     var classId = $(this).val();
     if (classId) {
         $.ajax({
-            url: '/get-subjects/' + classId,
+            url: '/get-subjectsbyclass/' + classId,
             type: 'GET',
             success: function (data) {
                 $('#subject_id').empty().append('<option value="">Choose...</option>');

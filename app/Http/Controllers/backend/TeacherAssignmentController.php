@@ -23,7 +23,8 @@ class TeacherAssignmentController extends Controller
                             'section',
                             'subject',
                             'academicSession'
-                        ])->latest()->get();
+                        ])->where('academic_session_id',activeSession()->id)
+                        ->latest()->get();
 
         return view('backend.TeacherAssignments.index',compact('assignments'));
     }

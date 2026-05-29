@@ -12,7 +12,7 @@ class Result extends Model
 
 
     protected $fillable = [
-    'student_id',
+    'student_session_id',
     'exam_id',
     'subject_id',
     'marks',

@@ -105,6 +105,7 @@
                         <label>Subject</label>
 
                         <select name="subject_id"
+                                id="subject_id"
                                 class="form-select"
                                 required>
 
@@ -164,7 +165,7 @@ $('#class_id').on('change', function () {
     var classId = $(this).val();
     if (classId) {
         $.ajax({
-            url: '/get-subjects/' + classId,
+            url: '/get-subjectsbyclass/' + classId,
             type: 'GET',
             success: function (data) {
                 $('#subject_id').empty().append('<option value="">Choose...</option>');

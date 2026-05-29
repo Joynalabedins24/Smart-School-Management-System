@@ -15,45 +15,44 @@
                         <th scope="col">#</th>
                         <th scope="col">Subject Name</th>
                         <th scope="col">Class</th>
-                        <th scope="col">Teacher</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                        
+
                         @foreach($Subjects as $key => $Subject)
                         <tr>
                             <th scope="row">{{$key + 1}}</th>
                             <td>{{ $Subject->name }}</td>
                             <td>{{ $Subject->class->name }}</td>
-                            <td>{{ $Subject->teacher->user->name }}</td>
-                            
+
+
                             <td>
                                 <div class="btn-group">
 
 
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-eye"></i></a>
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-pencil"></i></a>
-        
-        
+
+
                                     <button class="btn btn__delete"><i class="fa-solid fa-eraser"></i></button>
                                     <form class="delete__form" action="" method="POST">
-        
+
                                         @csrf
                                         @method('DELETE')
-        
+
                                     </form>
-        
-        
+
+
                                 </div>
                             </td>
                         </tr>
                         @endforeach
-                        
+
                     </tbody>
                 </table>
             </div>
         </div>
 
     </div>
-@endsection          
+@endsection

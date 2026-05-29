@@ -20,6 +20,7 @@ class StudentSessionController extends Controller
                             'class',
                             'academicSession'
                             ])
+                            ->where('academic_session_id',activeSession()->id)
                             ->latest()
                             ->get();
 

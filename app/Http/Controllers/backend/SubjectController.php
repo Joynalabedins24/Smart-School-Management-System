@@ -29,7 +29,6 @@ class SubjectController extends Controller
             [
                 'subjectName'=>'required|max:20',
                 'class_id'=>'required',
-                'Teacher_id'=>'required'
             ]
         );
 
@@ -37,7 +36,6 @@ class SubjectController extends Controller
         $subject = new Subject();
         $subject->name =$request->subjectName;
         $subject->class_id = $request->class_id;
-        $subject->teacher_id = $request->Teacher_id;                                                                                                        
         $subject->save();
         return redirect()->route('subject.index')->with('success','Information Updated Successfully!');
     }

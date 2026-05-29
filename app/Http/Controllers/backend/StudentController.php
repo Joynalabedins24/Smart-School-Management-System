@@ -34,29 +34,75 @@ class StudentController extends Controller
         return response()->json($sections);
     }
 
-    function index(Request $request){
+    public function index(Request $request)
+{
+    $query = StudentSession::with([
 
-        $query  = Student::with(['user', 'currentSession']);
+        'student.user',
 
-        // Search
-        if ($request->search) {
-        $query->where('student_id','like','%'.$request->search.'%')
-              ->orWhereHas('user', function($q) use ($request){
-                  $q->where('name','like','%'.$request->search.'%');
-              });
-        }
+        'class',
 
-        if ($request->class_id) {
-            $query->whereHas('currentSession', function ($q) use ($request) {
-                $q->where('class_id', $request->class_id);
-            });
-        }
+        'section'
 
-        $students = $query->paginate(10);
+    ])
 
-        $classes = Classe::all();
-        return view('backend.Students.index',compact('students','classes'));
+    ->where(
+        'academic_session_id',
+        activeSession()->id
+    );
+
+    // search
+    if ($request->search)
+    {
+        $query->whereHas(
+            'student',
+            function ($q) use ($request) {
+
+                $q->where(
+                    'student_id',
+                    'like',
+                    '%'.$request->search.'%'
+                )
+
+                ->orWhereHas(
+                    'user',
+                    function ($q2)
+                    use ($request) {
+
+                        $q2->where(
+                            'name',
+                            'like',
+                            '%'.$request->search.'%'
+                        );
+
+                    }
+                );
+
+            }
+        );
     }
+
+    // class filter
+    if ($request->class_id)
+    {
+        $query->where(
+            'class_id',
+            $request->class_id
+        );
+    }
+
+    $students = $query->paginate(10);
+
+    $classes = Classe::all();
+
+    return view(
+        'backend.Students.index',
+        compact(
+            'students',
+            'classes'
+        )
+    );
+}
 
 
 

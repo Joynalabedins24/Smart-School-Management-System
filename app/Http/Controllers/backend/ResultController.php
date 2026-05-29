@@ -45,7 +45,7 @@ class ResultController extends Controller
 
     public function getSubjectsByClass($classId){
         $subjects   = Subject::where('class_id', $classId)
-                            ->get(['id', 'name']);
+                            ->get();
         return response()->json($subjects);
     }
 
@@ -76,47 +76,29 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $classes = Classe::all();
-        //$subjects = Subject::all();
 
         $classe = null;
         $subject = null;
         $exam = null;
 
         $results = [];
-        //new lines
 
-        if ($request->class_id && $request->exam_id && $request->subject_id) {
+        if ($request->class_id && $request->exam_id && $request->subject_id)
+        {
+        $classe = Classe::find( $request->class_id);
+        $exam = Exam::where('academic_session_id', activeSession()->id)
+                ->findOrFail( $request->exam_id);
+        $subject = Subject::find($request->subject_id);
 
-        //$studentIds = Student::where('class_id', $request->class_id)
-        //->where('section_id', $request->section_id)
-        //->pluck('id');
-
-        //$present = Attendances::where('date', $request->date)
-        //->whereIn('student_id', $studentIds)
-        //->where('status', 'present')
-        //->count();
-        //$totalStudent = $studentIds->count();
-        //$absent = $totalStudent - $present ;
-        //$percentage = round(($present / $totalStudent) * 100);
-        //}
-
-        //new lines
-        //if ($request->date && $request->class_id && $request->section_id) {
-
-            $classe = Classe::find($request->class_id);
-            $exam = Exam::find($request->exam_id);
-            $subject = Subject::find($request->subject_id);
-
-           $results = Result::with(['student.user'])
-                    ->where('exam_id', $request->exam_id)
-                    ->where('subject_id', $request->subject_id)
-                    ->get();
-
-            }
-
-        //dd($students);
-
-        return view('backend.Results.index', compact('classes', 'results','subject','exam','classe'));
+        $results = Result::with(['studentSession.student.user'])
+                ->where('exam_id', $request->exam_id)
+                ->where('subject_id',$request->subject_id)
+                ->whereHas('studentSession',function ($q) use ($request) {
+                          $q->where('academic_session_id',activeSession()->id)
+                            ->where('class_id',$request->class_id);
+                        })->get();
+        }
+        return view('backend.Results.index',compact('classes','results','subject','exam','classe'));
     }
 
 
@@ -209,31 +191,28 @@ class ResultController extends Controller
 
 
     public function store(Request $request)
+{
+    $request->validate([
+        'exam_id' => 'required',
+        'subject_id' => 'required',
+        'students' => 'required|array'
+    ]);
+    foreach ($request->students as $studentSessionId => $data)
     {
-        foreach ($request->students as $studentId => $data) {
-            $request->validate(
-                [
-                    'exam_id' => 'required',
-                    'subject_id' => 'required',
-                    'students' => 'required|array'
-                ]
-            );
-
-            Result::updateOrCreate(
-                [
-                    'student_id' => $studentId,
-                    'exam_id' => $request->exam_id,
-                    'subject_id' => $request->subject_id
-                ],
-                [
-                    'marks' => $data['marks'] ?? "",
-                    'grade' => $data['grade'] ?? ""
-                ]
-            );
-        }
-
-        return back()->with('success', 'Marks Saved');
+        Result::updateOrCreate(
+            [
+                'student_session_id' => $studentSessionId,
+                'exam_id' => $request->exam_id,
+                'subject_id' => $request->subject_id
+            ],
+            [
+                'marks' => $data['marks'] ?? '',
+                'grade' => $data['grade'] ?? ''
+            ]
+        );
     }
+    return back()->with('success','Marks Saved Successfully!');
+}
 
 
 
