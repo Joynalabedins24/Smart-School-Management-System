@@ -10,7 +10,7 @@ class Fee extends Model
     use HasFactory;
 
     protected $fillable = [
-    'student_id',
+    'student_session_id',
     'fee_type',
     'month',
     'year',
@@ -18,9 +18,10 @@ class Fee extends Model
     'due_date',
     'status',
     ];
-    public function student()
+
+    public function studentSession()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(StudentSession::class);
     }
 
     public function payments()

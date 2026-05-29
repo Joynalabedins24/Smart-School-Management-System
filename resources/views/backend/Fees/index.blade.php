@@ -98,9 +98,9 @@
                         @foreach($fees as $key => $fee)
                         <tr>
                             <th scope="row">{{$key + 1}}</th>
-                            <td>{{ $fee->student->user->name }}</td>
-                            <td>{{ $fee->student->student_id }}</td>
-                            <td>{{ $fee->student->class->name }}</td>
+                            <td>{{ $fee->studentSession->student->user->name }}</td>
+                            <td>{{ $fee->studentSession->student->student_id }}</td>
+                            <td>{{ $fee->studentSession->class->name }}</td>
                             <td>{{ $fee->fee_type }}</td>
                             <td>{{ $fee->month }}</td>
                             <td>{{ $fee->due_date }}</td>

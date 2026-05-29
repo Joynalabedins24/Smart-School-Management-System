@@ -19,8 +19,12 @@
                         <option>Choose...</option>
                         @foreach($classes as $class)
                             <option value="{{ $class->id }}"
-                                {{ Auth::user()->student && Auth::user()->student->class_id == $class->id ? 'selected' : '' }}
-                                >{{ $class->name }}
+                                {{ Auth::user()->student && Auth::user()->student
+                                    ->studentSessions
+                                    ->where('academic_session_id', activeSession()->id)
+                                    ->first()?->class_id == $class->id ? 'selected' : ''
+                                    }}>
+                                        {{ $class->name }}
                             </option>
                         @endforeach
             </select>
@@ -65,27 +69,32 @@
             <div><b>Student Information:</b></div>
             <div class="row">
                 <div class="col-4">Name</div>
-                <div class="col-6">: {{$student->user->name ?? ""}}</div>
+                <div class="col-6">: {{$studentSession->student->user->name ?? ""}}</div>
             </div>
             <div class="row">
                 <div class="col-4">Id</div>
-                <div class="col-6">: {{$student->student_id ?? ""}}</div>
+                <div class="col-6">: {{$studentSession->student->student_id ?? ""}}</div>
             </div>
             <div class="row">
                 <div class="col-4">Class</div>
-                <div class="col-6">: {{$student->class->name ?? ""}}</div>
+                <div class="col-6">: {{$studentSession->class->name ?? ""}}</div>
             </div>
             <div class="row">
                 <div class="col-4">Section</div>
-                <div class="col-6">: {{$student->section->name ?? ""}}</div>
+                <div class="col-6">: {{$studentSession->section->name ?? ""}}</div>
             </div>
             <div class="row">
                 <div class="col-4">Gender</div>
-                <div class="col-6">: {{$student->gender ?? ""}}</div>
+                <div class="col-6">: {{$studentSession->student->gender ?? ""}}</div>
             </div>
             <div class="row">
                 <div class="col-4">Date of Birth</div>
-                <div class="col-6">: {{ optional($student)->dob ? \Carbon\Carbon::parse($student->dob)->format('jS F Y') : '' }}
+                <div class="col-6">:
+
+
+                        {{ optional(optional($studentSession)->student)->dob ? \Carbon\Carbon::parse($studentSession->student->dob)->format('jS F Y') : '' }}
+
+
                 </div>
             </div>
 
@@ -209,7 +218,7 @@
                         </td>
                         @if($key == 0)
                         <th rowspan="{{ $results->count() }}" class="align-middle" >
-                            {{ number_format($cgpa, 2) }}
+                            {{ number_format($cgpa, 2 ) }}
                         </th>
                         @endif
                     </tr>
@@ -259,7 +268,7 @@ $('#class_id').on('change', function () {
             success: function (data) {
                 $('#student_id').empty().append('<option value="">Choose...</option>');
                 $.each(data, function (key, student) {
-                    $('#student_id').append('<option value="' + student.id + '">' + student.user.name + ' ' + student.student_id + '</option>');
+                    $('#student_id').append('<option value="' + student.id + '">' + student.student.user.name + ' ' + student.student_id + '</option>');
                 });
             }
         });

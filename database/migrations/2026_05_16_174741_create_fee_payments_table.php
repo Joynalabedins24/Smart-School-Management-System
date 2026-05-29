@@ -11,16 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /*Schema::create('fee_payments', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('fee_id')
-          ->constrained()
-          ->onDelete('cascade');
-        $table->decimal('amount', 10, 2);
-        $table->date('payment_date');
-        $table->timestamps();
-        });*/
-
         Schema::create('fee_payments', function (Blueprint $table) {
 
         $table->id();

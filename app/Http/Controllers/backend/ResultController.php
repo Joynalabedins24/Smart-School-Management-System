@@ -102,7 +102,7 @@ class ResultController extends Controller
     }
 
 
-    public function marksheet(Request $request)
+    /*public function marksheet(Request $request)
     {
         $classes = Classe::all();
         $results = [];
@@ -184,7 +184,130 @@ class ResultController extends Controller
         }
 
         return view('backend.Results.marks_sheet', compact('classes','student','exam','results','cgpa'));
+    }*/
+
+    public function marksheet(Request $request)
+    {
+        $classes = Classe::all();
+        $results = [];
+        $cgpa = 0;
+        $exam = null;
+        $studentSession = null;
+        //student login
+        if (Auth::user()->student)
+        {
+            $student = Auth::user()->student;
+            $studentSession = StudentSession::with(['student.user','class','section'])
+                            ->where('student_id',$student->id)
+                            ->where('academic_session_id',activeSession()->id)
+                            ->first();
+            if ($request->exam_id)
+            {
+                $exam  = Exam::where('academic_session_id',activeSession()->id)
+                            ->findOrFail($request->exam_id);
+                $results= Result::with(['subject','exam','studentSession.student.user'])
+                            ->where('student_session_id',$studentSession->id)
+                            ->where('exam_id',$request->exam_id)
+                            ->get();
+                $totalPoints = 0;
+
+
+
+                foreach ($results as $result) {
+
+                    if ($result->grade == 'A+') {
+                    $point = 5.00;
+                    } elseif ($result->grade == 'A') {
+                    $point = 4.00;
+                    } elseif ($result->grade == 'A-') {
+                    $point = 3.50;
+                    } elseif ($result->grade == 'B') {
+                    $point = 3.00;
+                    } elseif ($result->grade == 'C') {
+                    $point = 2.00;
+                    } else {
+                    $point = 0.00;
+                    }
+
+                    $totalPoints += $point;
+                }
+
+                $cgpa = $results->count() > 0 ? $totalPoints / $results->count() : 0;
+            }
+        }
+        //ADMIN / TEACHER
+        else
+        {
+            if ($request->exam_id && $request->student_id)
+            {
+                $studentSession = StudentSession::with(['student.user','class','section'])
+                                ->where('academic_session_id',activeSession()->id)
+                                ->findOrFail($request->student_id);
+                $exam = Exam::where('academic_session_id',activeSession()->id)
+                                ->findOrFail($request->exam_id);
+                $results = Result::with(['subject','exam','studentSession.student.user'])
+                                ->where('student_session_id',$studentSession->id)
+                                ->where('exam_id', $request->exam_id)
+                                ->get();
+                $totalPoints = 0;
+
+                foreach ($results as $result) {
+
+                    if ($result->grade == 'A+') {
+                    $point = 5.00;
+                    } elseif ($result->grade == 'A') {
+                    $point = 4.00;
+                    } elseif ($result->grade == 'A-') {
+                    $point = 3.50;
+                    } elseif ($result->grade == 'B') {
+                    $point = 3.00;
+                    } elseif ($result->grade == 'C') {
+                    $point = 2.00;
+                    } else {
+                    $point = 0.00;
+                    }
+
+                    $totalPoints += $point;
+                }
+
+                $cgpa = $results->count() > 0 ? $totalPoints / $results->count() : 0;
+            }
+        }
+        //CGPA CALCULATION
+
+        /*$totalPoints = 0;
+
+        foreach ($results as $result)
+        {
+            if ($result->grade == 'A+'){
+                $point = 5.00;
+            }
+            elseif ($result->grade == 'A'){
+                $point = 4.00;
+            }
+            elseif ($result->grade == 'A-'){
+                $point = 3.50;
+            }
+            elseif ($result->grade == 'B'){
+                $point = 3.00;
+            }
+            elseif ($result->grade == 'C'){
+                $point = 2.00;
+            }
+            elseif ($result->grade == 'D'){
+                $point = 1.00;
+            }
+            else{
+                $point = 0.00;
+            }
+
+            $totalPoints += $point;
+        }
+        $cgpa = $results->count() > 0 ? $totalPoints / $results->count(): 0;*/
+
+        return view('backend.Results.marks_sheet', compact('classes','studentSession','exam','results','cgpa'));
     }
+
 
 
 

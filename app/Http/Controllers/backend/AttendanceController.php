@@ -283,91 +283,35 @@ class AttendanceController extends Controller
 
 
 
-   public function studentCalendar(
-    Request $request,
-    $student_id = null
-)
-{
-    // student user
-    if (Auth::user()->student)
+    public function studentCalendar(Request $request, $student_id = null)
     {
-        $student =
-            Auth::user()->student;
+        // student user
+        if (Auth::user()->student){
+            $student = Auth::user()->student;
+        }
+        else{
+            $student = Student::with('user')->findOrFail($student_id);
+        }
+
+        // current month
+        $month = $request->month ?? date('Y-m');
+        $start = Carbon::parse($month)->startOfMonth();
+        $end = Carbon::parse($month)->endOfMonth();
+
+        // active student session
+        $studentSession = StudentSession::where('student_id',$student->id)
+                                        ->where('academic_session_id',activeSession()->id)
+                                        ->first();
+
+        // attendance data
+        $attendances = Attendances::where('student_session_id',$studentSession->id)
+                                    ->whereBetween('date',[$start, $end])
+                                    ->get()
+                                    ->keyBy(function ($item) {
+                                            return Carbon::parse($item->date)->format('Y-m-d');
+                                    });
+
+
+        return view('backend.Attendance.calender',compact('student','attendances','month'));
     }
-    else
-    {
-        $student = Student::with(
-                        'user'
-                    )->findOrFail(
-                        $student_id
-                    );
-    }
-
-    // current month
-    $month =
-        $request->month
-        ?? date('Y-m');
-
-    $start =
-        Carbon::parse($month)
-        ->startOfMonth();
-
-    $end =
-        Carbon::parse($month)
-        ->endOfMonth();
-
-
-    // active student session
-    $studentSession = StudentSession::where(
-
-                            'student_id',
-                            $student->id
-
-                        )
-
-                        ->where(
-
-                            'academic_session_id',
-                            activeSession()->id
-
-                        )
-
-                        ->first();
-
-    // attendance data
-    $attendances = Attendances::where(
-
-                        'student_session_id',
-                        $studentSession->id
-
-                    )
-
-                    ->whereBetween(
-                        'date',
-                        [$start, $end]
-                    )
-
-                    ->get()
-
-                    ->keyBy(function ($item) {
-
-                        return Carbon::parse(
-                                    $item->date
-                                )->format(
-                                    'Y-m-d'
-                                );
-                    });
-
-
-    return view(
-        'backend.Attendance.calender',
-        compact(
-
-            'student',
-            'attendances',
-            'month'
-
-        )
-    );
-}
 }

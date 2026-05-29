@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classe;
 use App\Models\Fee;
 use App\Models\Student;
+use App\Models\StudentSession;
 use Illuminate\Http\Request;
 
 class FeeController extends Controller
@@ -14,81 +15,85 @@ class FeeController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
+{
+    // Late fee auto update
+    $allFees = Fee::where('status', '!=', 'paid')->get();
 
-        $allFees = Fee::where('status', '!=', 'paid')->get();
+    foreach ($allFees as $fee) {
 
-        foreach($allFees as $fee){
+        if (now()->gt($fee->due_date) && $fee->late_fee == 0) {
 
-            if(now()->gt($fee->due_date) && $fee->late_fee == 0){
-
-                $fee->late_fee = 100;
-
-                $fee->save();
-            }
-
-            if(now()->lte($fee->due_date) && $fee->late_fee == 100){
-
-                $fee->late_fee = 0;
-
-                $fee->save();
-            }
+            $fee->late_fee = 100;
+            $fee->save();
         }
 
-        $classes = Classe::all();
+        if (now()->lte($fee->due_date) && $fee->late_fee == 100) {
 
-        $fees = Fee::with([ 'student.user',
-                            'student.class',
-                            'payments'
-                        ]);
-
-
-        if ($request->search) {
-
-            $fees->where(function($query) use ($request){
-
-                $query->where('student_id', 'like', '%'.$request->search.'%')
-
-                        ->orWhereHas('student.user', function($q) use ($request){
-
-                        $q->where('name', 'like', '%'.$request->search.'%');
-
-                        });
-                });
+            $fee->late_fee = 0;
+            $fee->save();
         }
-
-
-        // Class Filter
-        if($request->class_id){
-
-            $fees->whereHas('student', function($q) use ($request){
-
-            $q->where('class_id', $request->class_id);
-
-            });
-        }
-        // Fee Type Filter
-        if($request->fee_type){
-
-            $fees->where('fee_type', $request->fee_type);
-        }
-
-
-        if($request->status){
-
-            $fees->where('status', $request->status);
-
-        }
-
-        if($request->month){
-
-            $fees->where('month', $request->month);
-
-        }
-        $fees = $fees->paginate(10);
-        return view('backend.Fees.index',compact('fees','classes'));
     }
 
+    $classes = Classe::all();
+
+    $fees = Fee::with([
+        'studentSession.student.user',
+        'studentSession.class',
+        'payments'
+    ]);
+
+    // Search
+    if ($request->search) {
+
+        $fees->where(function ($query) use ($request) {
+
+            $query->whereHas('studentSession.student', function ($q) use ($request) {
+
+                $q->where('student_id', 'like', '%' . $request->search . '%');
+
+            })
+
+            ->orWhereHas('studentSession.student.user', function ($q) use ($request) {
+
+                $q->where('name', 'like', '%' . $request->search . '%');
+
+            });
+        });
+    }
+
+    // Class Filter
+    if ($request->class_id) {
+
+        $fees->whereHas('studentSession', function ($q) use ($request) {
+
+            $q->where('class_id', $request->class_id)
+              ->where('academic_session_id', activeSession()->id);
+
+        });
+    }
+
+    // Fee Type Filter
+    if ($request->fee_type) {
+
+        $fees->where('fee_type', $request->fee_type);
+    }
+
+    // Status Filter
+    if ($request->status) {
+
+        $fees->where('status', $request->status);
+    }
+
+    // Month Filter
+    if ($request->month) {
+
+        $fees->where('month', $request->month);
+    }
+
+    $fees = $fees->latest()->paginate(10);
+
+    return view('backend.Fees.index', compact('fees', 'classes'));
+}
     /**
      * Show the form for creating a new resource.
      */
@@ -103,32 +108,42 @@ class FeeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+{
+        $request->validate([
+            'class_id'   => 'required',
+            'fee_type'   => 'required',
+            'year'       => 'required',
+            'amount'     => 'required',
+            'due_date'   => 'required',
+        ]);
 
-        $students = Student::where('class_id', $request->class_id)->get();
-        //print($students);
-        //print($request->total_amount);
+        // active student sessions
+        $studentSessions= StudentSession::where('class_id', $request->class_id)
+                        ->where('academic_session_id', activeSession()->id)
+                        ->get();
 
-        foreach($students as $student){
-            $exists = Fee::where('student_id', $student->id)
-            ->where('fee_type', $request->fee_type)
-            ->where('month', $request->month)
-            ->where('year', $request->year)
-            ->exists();
+        foreach ($studentSessions as $studentSession) {
+            //prevent duplicate data
+            $exists = Fee::where('student_session_id', $studentSession->id)
+                        ->where('fee_type', $request->fee_type)
+                        ->where('month', $request->month)
+                        ->where('year', $request->year)
+                        ->exists();
 
-            if(!$exists){
+            if (!$exists) {
+
                 Fee::create([
-                'student_id' => $student->id,
-                'fee_type' => $request->fee_type,
-                'month' => $request->month,
-                'year' => $request->year,
-                'total_amount' => $request->amount,
-                'due_date' => $request->due_date,
+                'student_session_id' => $studentSession->id,
+                'fee_type'           => $request->fee_type,
+                'month'              => $request->month,
+                'year'               => $request->year,
+                'total_amount'       => $request->amount,
+                'due_date'           => $request->due_date,
                 ]);
             }
         }
-        return redirect()->route('Fees.index')->with('success','Information Updated Successfully!');
 
+        return redirect()->route('Fees.index')->with('success', 'Fee Generated Successfully!');
     }
 
     /**
@@ -137,10 +152,12 @@ class FeeController extends Controller
     public function show(string $id)
     {
         $fee = Fee::with([
-        'student.user',
-        'student.class',
-        'payments'
-        ])->findOrFail($id);
+                'studentSession.student.user',
+                'studentSession.class',
+                'studentSession.section',
+                'payments'
+        ])
+        ->findOrFail($id);
 
         return view('backend.Fees.details', compact('fee'));
     }
