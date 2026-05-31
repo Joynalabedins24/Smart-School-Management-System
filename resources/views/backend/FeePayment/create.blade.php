@@ -33,12 +33,12 @@
                                 Select Student
                             </option>
 
-                            @foreach($students as $student)
+                            @foreach($studentSessions as $studentSession)
 
-                                <option value="{{ $student->id }}">
+                                <option value="{{ $studentSession->id }}">
 
-                                    {{ $student->user->name ?? '' }}
-
+                                    {{ $studentSession->student->user->name ?? '' }}
+                                    {{ $studentSession->id ?? '' }}
                                 </option>
 
                             @endforeach

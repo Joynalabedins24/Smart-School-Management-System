@@ -60,7 +60,7 @@
                                 </td>
 
                                 <td>
-                                    {{ $payment->fee->student->user->name ?? '' }}
+                                    {{ $payment->fee->studentSession->student->user->name ?? '' }}
                                 </td>
 
                                 <td>

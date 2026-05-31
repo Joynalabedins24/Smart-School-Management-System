@@ -36,11 +36,13 @@ class FeeController extends Controller
 
     $classes = Classe::all();
 
-    $fees = Fee::with([
-        'studentSession.student.user',
-        'studentSession.class',
-        'payments'
-    ]);
+    $fees = Fee::with([ 'studentSession.student.user',
+                        'studentSession.class',
+                        'payments'
+                    ])
+                    ->whereHas('studentSession', function ($q) use ($request) {
+                        $q ->where('academic_session_id', activeSession()->id);
+                    });
 
     // Search
     if ($request->search) {

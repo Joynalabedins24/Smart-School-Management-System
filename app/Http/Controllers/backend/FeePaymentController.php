@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fee;
 use App\Models\FeePayment;
 use App\Models\Student;
+use App\Models\StudentSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,16 +14,18 @@ class FeePaymentController extends Controller
 {
     public function create()
     {
-        $students = Student::with('user')->get();
+        $studentSessions = StudentSession::with('student.user')
+                        ->where('academic_session_id', activeSession()->id)
+                        ->get();
 
-        return view('backend.FeePayment.create',compact('students'));
+        return view('backend.FeePayment.create',compact('studentSessions'));
     }
 
     public function getFees(Request $request)
     {
         $fees = Fee::with('payments')
 
-                    ->where('student_id', $request->student_id)
+                    ->where('student_session_id', $request->student_id)
 
                     ->where('status', '!=', 'paid')
 
@@ -132,57 +135,66 @@ class FeePaymentController extends Controller
     public function index(Request $request)
     {
         $payments = FeePayment::with([
-                    'fee.student.user'
-                    ])
-                    ->latest()
-                    ->paginate(10);
+                'fee.studentSession.student.user'
+            ])
+            ->whereHas('fee.studentSession', function ($q) {
+                $q->where('academic_session_id', activeSession()->id);
+            })
+            ->latest()
+            ->paginate(10);
 
-            return view('backend.FeePayment.index',compact('payments'));
+        return view('backend.FeePayment.index', compact('payments'));
     }
 
     public function receipt($receipt_no)
     {
         $payments = FeePayment::with([
-                    'fee.student.user',
-                    'fee.student.class'
+                    'fee.studentSession.student.user',
+                    'fee.studentSession.class',
+                    'fee.studentSession.section',
+                    'fee.studentSession.academicSession'
                 ])
                 ->where('receipt_no', $receipt_no)
                 ->get();
+
 
         return view('backend.FeePayment.receipt',compact('payments', 'receipt_no'));
     }
 
     public function ledger()
     {
-        $student_id = Auth::user()->student->id;
+        $student = Auth::user()->student;
 
-        $fees = Fee::with('payments')
+        $fees = Fee::with([
+            'payments',
+            'studentSession'
+        ])
+        ->whereHas('studentSession', function ($q) use ($student) {
 
-                    ->where('student_id', $student_id)
+            $q->where('student_id', $student->id)
+              ->where('academic_session_id', activeSession()->id);
 
-                    ->latest()
-
-                    ->get();
+        })
+        ->latest()
+        ->get();
 
         $totalFees = 0;
-
         $totalPaid = 0;
-
         $totalDue = 0;
 
-        foreach($fees as $fee){
+        foreach ($fees as $fee) {
 
             $paid = $fee->payments->sum('amount');
 
-            $due = ($fee->total_amount + $fee->late_fee) - $paid;
+            $due = ($fee->total_amount + ($fee->late_fee ?? 0)) - $paid;
 
-            $totalFees += ($fee->total_amount + $fee->late_fee);
+            $totalFees += ($fee->total_amount + ($fee->late_fee ?? 0));
 
             $totalPaid += $paid;
 
             $totalDue += $due;
         }
 
-        return view('backend.FeePayment.ledger', compact('fees','totalFees','totalPaid','totalDue'));
+        return view('backend.FeePayment.ledger', compact('fees', 'totalFees', 'totalPaid', 'totalDue'));
     }
 }

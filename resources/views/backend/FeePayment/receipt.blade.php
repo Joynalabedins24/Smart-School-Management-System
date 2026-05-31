@@ -27,11 +27,9 @@
             </div>
 
             @php
-
-                $student = $payments->first()->fee->student;
-
+                $studentSession = $payments->first()->fee->studentSession;
+                $student = $studentSession->student;
                 $totalPaid = $payments->sum('amount');
-
             @endphp
 
             <!-- School Info -->
@@ -71,20 +69,24 @@
             <!-- Student Info -->
             <div class="row mb-4">
 
-                <div class="col-md-6">
+                <div class="col-md-4">
 
                     <strong>Student Name :</strong>
 
-                    {{ $student->user->name ?? '' }}
+                    {{ $studentSession->student->user->name ?? '' }}
 
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4 text-center">
 
                     <strong>Class :</strong>
 
-                    {{ $student->classroom->name ?? '' }}
+                    {{ $studentSession->class->name ?? '' }}
 
+                </div>
+                <div class="col-md-4 text-end">
+                    <strong>Section :</strong>
+                        {{ $studentSession->section->name ?? '' }}
                 </div>
 
             </div>

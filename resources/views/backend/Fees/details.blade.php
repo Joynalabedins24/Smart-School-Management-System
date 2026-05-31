@@ -28,12 +28,12 @@
 
                 <div class="col-md-6">
                     <strong>Student Name :</strong>
-                    {{ $fee->student->user->name ?? '' }}
+                    {{ $fee->studentSession->student->user->name ?? '' }}
                 </div>
 
                 <div class="col-md-6">
                     <strong>Class :</strong>
-                    {{ $fee->student->class->name ?? '' }}
+                    {{ $fee->studentSession->class->name ?? '' }}
                 </div>
 
             </div>

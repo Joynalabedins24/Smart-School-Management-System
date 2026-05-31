@@ -14,7 +14,7 @@
         <!-- Student -->
             <div class="input-group mb-3">
             <label class="input-group-text" for="class_id">Student Name :</label>
-            <input type="text" name="student" class="form-control" value="{{ $fee->student->user->name }}" readonly>
+            <input type="text" name="student" class="form-control" value="{{ $fee->studentSession->student->user->name }}" readonly>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
         <!-- Student_Id -->
             <div class="input-group mb-3">
             <label class="input-group-text" for="class_id">Student ID :</label>
-            <input type="text" name="student_id" class="form-control" value="{{ $fee->student->student_id }}" readonly>
+            <input type="text" name="student_id" class="form-control" value="{{ $fee->studentSession->student->student_id }}" readonly>
             </div>
         </div>
 
@@ -31,7 +31,7 @@
         <!-- class -->
             <div class="input-group mb-3">
             <label class="input-group-text" for="class_id">Class :</label>
-            <input type="text" name="class" class="form-control" value="{{ $fee->student->class->name }}" readonly>
+            <input type="text" name="class" class="form-control" value="{{ $fee->studentSession->class->name }}" readonly>
             </div>
         </div>
 
