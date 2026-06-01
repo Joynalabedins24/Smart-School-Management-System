@@ -39,4 +39,29 @@ class SubjectController extends Controller
         $subject->save();
         return redirect()->route('subject.index')->with('success','Information Updated Successfully!');
     }
+
+    public function edit($id)
+    {
+        $subject = Subject::findOrFail($id);
+        $classes = Classe::all(); // dropdown এর জন্য
+
+        return view('backend.Subjects.edit', compact('subject','classes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'subjectName' => 'required',
+            'class_id' => 'required',
+        ]);
+
+        $subject = Subject::findOrFail($id);
+
+        $subject->update([
+            'name' => $request->subjectName,
+            'class_id' => $request->class_id
+        ]);
+
+        return redirect()->route('subject.index')->with('success', 'Class Updated Successfully');
+    }
 }

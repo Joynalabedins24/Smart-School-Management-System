@@ -44,6 +44,8 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('student.index') }}">All Students</a></li>
                                 <li><a class="dropdown-item" href="{{ route('StudentSessions.index') }}">Student's Session's</a></li>
+                                <li><a class="dropdown-item" href="{{ route('roll.assignment') }}">Roll Assignment</a></li>
+                                <li><a class="dropdown-item" href="{{ route('promotions.index') }}">Promotion</a></li>
                             </ul>
                         </li>
 

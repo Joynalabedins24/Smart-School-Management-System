@@ -32,7 +32,7 @@
 
 
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-eye"></i></a>
-                                    <a class="btn fw-bold" href=""><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn fw-bold" href="{{ route('subject.edit',$Subject->id) }}""><i class="fa-solid fa-pencil"></i></a>
 
 
                                     <button class="btn btn__delete"><i class="fa-solid fa-eraser"></i></button>

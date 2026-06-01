@@ -13,7 +13,10 @@ class StudentSession extends Model
     'student_id',
     'class_id',
     'section_id',
-    'academic_session_id'
+    'academic_session_id',
+    'roll_no',
+    'status',
+    'remarks'
     ];
 
     public function Student()

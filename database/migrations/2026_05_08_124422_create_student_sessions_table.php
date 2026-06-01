@@ -21,6 +21,16 @@ return new class extends Migration
 
         $table->unsignedBigInteger('academic_session_id');
 
+        $table->integer('roll_no')->nullable();
+
+    	$table->enum('status', [
+        	        'active',
+        	        'transferred',
+        	        'graduated'
+    		        ])->default('active');
+
+    	$table->text('remarks')->nullable();
+
         $table->timestamps();
 
         $table->foreign('student_id')
@@ -37,6 +47,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('academic_sessions')
                 ->onDelete('cascade');
+
+        $table->unique(['student_id','academic_session_id']);
 
         });
     }

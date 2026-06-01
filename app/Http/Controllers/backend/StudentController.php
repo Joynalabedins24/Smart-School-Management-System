@@ -35,74 +35,39 @@ class StudentController extends Controller
     }
 
     public function index(Request $request)
-{
-    $query = StudentSession::with([
-
-        'student.user',
-
-        'class',
-
-        'section'
-
-    ])
-
-    ->where(
-        'academic_session_id',
-        activeSession()->id
-    );
-
-    // search
-    if ($request->search)
     {
-        $query->whereHas(
-            'student',
-            function ($q) use ($request) {
+        $query  = StudentSession::with(['student.user','class','section'])
+                ->where('academic_session_id',activeSession()->id);
 
-                $q->where(
-                    'student_id',
-                    'like',
-                    '%'.$request->search.'%'
-                )
-
-                ->orWhereHas(
-                    'user',
-                    function ($q2)
-                    use ($request) {
-
-                        $q2->where(
-                            'name',
+        // search
+        if ($request->search)
+        {
+            $query ->whereHas('student',function ($q) use ($request) {
+                $q->where(  'student_id',
                             'like',
                             '%'.$request->search.'%'
-                        );
+                        )
+                    ->orWhereHas('user',function ($q2) use ($request) {
+                    $q2->where( 'name',
+                                'like',
+                                '%'.$request->search.'%'
+                            );
+                    });
+            });
+        }
 
-                    }
-                );
+        // class filter
+        if ($request->class_id)
+        {
+            $query->where('class_id', $request->class_id);
+        }
 
-            }
-        );
+        $students = $query->paginate(10);
+
+        $classes = Classe::all();
+
+        return view('backend.Students.index', compact('students','classes'));
     }
-
-    // class filter
-    if ($request->class_id)
-    {
-        $query->where(
-            'class_id',
-            $request->class_id
-        );
-    }
-
-    $students = $query->paginate(10);
-
-    $classes = Classe::all();
-
-    return view(
-        'backend.Students.index',
-        compact(
-            'students',
-            'classes'
-        )
-    );
-}
 
 
 
@@ -159,6 +124,9 @@ class StudentController extends Controller
             'class_id'              => $request->class_id,
             'section_id'            => $request->section_id,
             'academic_session_id'   => activeSession()->id,
+            'roll_no' => null,
+            'status' => 'active',
+            'remarks' => 'New addmission',
             ]);
 
             //database insertion

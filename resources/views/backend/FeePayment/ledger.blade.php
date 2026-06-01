@@ -174,14 +174,13 @@
                                 </td>
 
                                 <td>
-
-                                    @if($fee->payments->count() > 0)
+                                    @if($fee->payments->isNotEmpty())
 
                                         <a href="{{ route(
                                                 'FeePayments.receipt',
                                                 $fee->payments->last()->receipt_no
                                             ) }}"
-                                           class="btn btn-info btn-sm">
+                                            class="btn btn-info btn-sm">
 
                                             Receipt {{ $fee->payments->last()->receipt_no }}
 
@@ -192,7 +191,6 @@
                                         N/A
 
                                     @endif
-
                                 </td>
 
                             </tr>

@@ -61,7 +61,8 @@ class Student extends Model
 
     public function currentSession()
     {
-        return $this->hasOne(StudentSession::class)->latestOfMany();
+        return $this->hasOne(StudentSession::class)
+                    ->where('academic_session_id', activeSession()->id);
     }
 
     // Accessor Example: Full student ID with prefix

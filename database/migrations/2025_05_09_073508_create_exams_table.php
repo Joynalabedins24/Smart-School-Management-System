@@ -17,6 +17,11 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->unsignedBigInteger('class_id');
+            $table->enum('exam_type',[
+                        'class_test',
+                        'mid_term',
+                        'final'
+                    ])->default('class_test');
             $table->timestamps();
 
             // Foreign key

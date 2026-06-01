@@ -7,7 +7,9 @@ use App\Http\Controllers\backend\ClasseController;
 use App\Http\Controllers\backend\ExamController;
 use App\Http\Controllers\backend\FeeController;
 use App\Http\Controllers\backend\FeePaymentController;
+use App\Http\Controllers\backend\PromotionController;
 use App\Http\Controllers\backend\ResultController;
+use App\Http\Controllers\backend\RollAssignmentController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
 use App\Http\Controllers\backend\StudentSessionController;
@@ -56,7 +58,8 @@ Route::get('/All-teacher',[TeacherController::class,'index'])->name('teacher.ind
 Route::get('/add-subject',[SubjectController::class,'create'])->name('subject.create');
 Route::get('/All-subject',[SubjectController::class,'index'])->name('subject.index');
 Route::post('/store-subject',[SubjectController::class,'store'])->name('subject.store');
-
+Route::get('/subject/edit/{id}', [SubjectController::class, 'edit'])->name('subject.edit');
+Route::post('/subject/update/{id}', [SubjectController::class, 'update'])->name('subject.update');
 
 //classes routes
 Route::get('/add-classe',[ClasseController::class,'create'])->name('classe.create');
@@ -134,3 +137,13 @@ Route::resource('StudentSessions',StudentSessionController::class);
 //Teacher Assignment Session-wise route
 Route::resource('TeacherAssignments', TeacherAssignmentController::class);
 Route::get('/get-subjects/{class_id}', [TeacherAssignmentController::class, 'getSubjects']);
+
+
+//Roll Assignment
+Route::get('/roll-assignment', [RollAssignmentController::class, 'index'])->name('roll.assignment');
+Route::post('/roll-assignment', [RollAssignmentController::class, 'store'])->name('roll.assignment.store');
+
+
+//promotion routes
+Route::get('/promotions', [PromotionController::class,'index'])->name('promotions.index');
+Route::post('/promotions/process', [PromotionController::class,'process'])->name('promotions.process');
