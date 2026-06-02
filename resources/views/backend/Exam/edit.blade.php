@@ -5,7 +5,7 @@
     @csrf
     @method('PUT')
         <!--Exam_name-->
-        <div class="col-md-">
+        <div class="col-md-6">
           <label for="validationCustom01" class="form-label"> Exam Name</label>
           <input type="text" name="examName" class="form-control" id="validationCustom01" value="{{ $exam->name }}" required>
           <div class="invalid-feedback">
@@ -15,6 +15,28 @@
               @error('examName')
               {{ $message }}
               @enderror
+          </div>
+        </div>
+
+
+        <!--Exam_Type-->
+        <div class="col-md-6">
+          <label for="Exam_Type" class="form-label"> Exam Type </label>
+          <select class="form-select form-control" name="Exam_Type"  required>
+            <option selected disabled value="{{ old('Exam_Type') }}">Choose...</option>
+
+             <option value="final" {{ $exam->exam_type == "final" ? 'selected' : '' }}>Final</option>
+             <option value="mid_term" {{ $exam->exam_type == "mid_term" ? 'selected' : '' }}>Mid Term</option>
+             <option value="class_test" {{ $exam->exam_type == "class_test" ? 'selected' : '' }}>Class Test</option>
+
+          </select>
+          <div class="invalid-feedback">
+            Please enter The Date of your admission
+          </div>
+          <div class="text-danger">
+            @error('Exam_Type')
+            {{ $message }}
+            @enderror
           </div>
         </div>
 

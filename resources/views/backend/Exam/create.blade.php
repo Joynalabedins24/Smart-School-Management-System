@@ -4,7 +4,7 @@
     <form action="{{ route('exams.store')}}" method="POST" class="row g-3 needs-validation">
       @csrf
         <!--Exam_name-->
-        <div class="col-md-">
+        <div class="col-md-6">
           <label for="validationCustom01" class="form-label"> Exam Name</label>
           <input type="text" name="examName" class="form-control" id="validationCustom01" value="{{ old('examName') }}" required>
           <div class="invalid-feedback">
@@ -14,6 +14,28 @@
               @error('examName')
               {{ $message }}
               @enderror
+          </div>
+        </div>
+
+
+        <!--Exam_Type-->
+        <div class="col-md-6">
+          <label for="Exam_Type" class="form-label"> Exam Type </label>
+          <select class="form-select form-control" name="Exam_Type"  required>
+            <option selected disabled value="{{ old('Exam_Type') }}">Choose...</option>
+
+             <option value="final">Final</option>
+             <option value="mid_term">Mid Term</option>
+             <option value="class_test">Class Test</option>
+
+          </select>
+          <div class="invalid-feedback">
+            Please enter The Date of your admission
+          </div>
+          <div class="text-danger">
+            @error('Exam_Type')
+            {{ $message }}
+            @enderror
           </div>
         </div>
 

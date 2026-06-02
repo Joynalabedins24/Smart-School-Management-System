@@ -225,7 +225,11 @@
 
                     <th>Roll</th>
 
+                    <th>Result</th>
+
                     <th>Total Due</th>
+
+                    <th>Suggested Action</th>
 
                     <th>Action</th>
 
@@ -257,7 +261,49 @@
 
                     <td>
 
+                        @if($student->result_status == 'Pass')
+
+                            <span class="badge bg-success">
+                                Pass
+                            </span>
+
+                        @else
+
+                            <span class="badge bg-danger">
+                                Fail
+                            </span>
+
+                        @endif
+
+                    </td>
+
+                    <td>
+
                         ৳ {{ number_format($student->total_due, 2) }}
+
+                    </td>
+
+                    <td>
+
+                        @if($student->promotion_action == 'promote')
+
+                            <span class="badge bg-success">
+                                Promote
+                            </span>
+
+                        @elseif($student->promotion_action == 'repeat')
+
+                            <span class="badge bg-warning">
+                                Repeat
+                            </span>
+
+                        @else
+
+                            <span class="badge bg-danger">
+                                Hold
+                            </span>
+
+                        @endif
 
                     </td>
 
@@ -267,41 +313,20 @@
                             name="students[{{ $student->student_id }}]"
                             class="form-select">
 
-                            @if($student->total_due > 0)
+                            <option value="promote"
+                                {{ $student->promotion_action == 'promote' ? 'selected' : '' }}>
+                                Promote
+                            </option>
 
-                                <option value="hold" selected>
+                            <option value="repeat"
+                                {{ $student->promotion_action == 'repeat' ? 'selected' : '' }}>
+                                Repeat
+                            </option>
 
-                                    Hold
-
-                                </option>
-
-                                <option value="repeat">
-
-                                    Repeat
-
-                                </option>
-
-                            @else
-
-                                <option value="promote" selected>
-
-                                    Promote
-
-                                </option>
-
-                                <option value="repeat">
-
-                                    Repeat
-
-                                </option>
-
-                                <option value="hold">
-
-                                    Hold
-
-                                </option>
-
-                            @endif
+                            <option value="hold"
+                                {{ $student->promotion_action == 'hold' ? 'selected' : '' }}>
+                                Hold
+                            </option>
 
                         </select>
 

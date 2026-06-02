@@ -23,7 +23,6 @@ return new class extends Migration
                         'final'
                     ])->default('class_test');
             $table->timestamps();
-
             // Foreign key
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
 

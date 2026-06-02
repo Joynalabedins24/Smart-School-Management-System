@@ -30,6 +30,7 @@ class ExamController extends Controller
         $request->validate(
             [
                 'examName'=>'required',
+                'Exam_Type'=>'required',
                 'startDate' => 'required|date',
                 'endDate'=>'required|date',
                 'ClasseName'=>'required'
@@ -42,6 +43,7 @@ class ExamController extends Controller
         $exam->start_date = $request->startDate;
         $exam->end_date  = $request->endDate;
         $exam->class_id  = $request->ClasseName;
+        $exam->exam_type  = $request->Exam_Type;
         $exam->academic_session_id = activeSession()->id;
         $exam->save();
         return redirect()->route('exams.index')->with('success', 'Exam created');
@@ -65,6 +67,7 @@ class ExamController extends Controller
             'name' => $request->examName,
             'start_date' => $request->startDate,
             'end_date' => $request->endDate,
+            'exam_type' => $request->Exam_Type,
             'class_id' => $request->class_id,
         ]);
 
