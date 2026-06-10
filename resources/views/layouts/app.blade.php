@@ -38,6 +38,21 @@
                     @auth
                     <ul class="navbar-nav me-auto">
                         <li class="dropdown">
+                            <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="">
+                               Administration
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('permissions.index') }}">permissions</a></li>
+                                <li><a class="dropdown-item" href="{{ route('roles.index') }}">Role</a></li>
+                                <li><a class="dropdown-item" href="{{ route('users.roles.index') }}">Users Role</a></li>
+                                {{--
+                                <li><aclass="dropdown-item"href="route('exams.index') ">Exams</a></li>
+                                <li><a class="dropdown-item" href="{{ route('AcademicSessions.index') }}">Sessions</a></li>
+                                --}}
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
                             <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="{{ route('student.index') }}">
                                Students
                             </a>
@@ -71,16 +86,18 @@
                                School Materials
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('subject.index') }}">Subjects</a></li>
+                                <li><a class="dropdown-item" href="{{ route('subjects.index') }}">Subjects</a></li>
                                 <li><a class="dropdown-item" href="{{ route('classe.index') }}">Classes</a></li>
-                                <li><a class="dropdown-item" href="{{ route('section.index') }}">Sections</a></li>
+                                <li><a class="dropdown-item" href="{{ route('sections.index') }}">Sections</a></li>
                                 <li><a class="dropdown-item" href="{{ route('exams.index') }}">Exams</a></li>
                                 <li><a class="dropdown-item" href="{{ route('AcademicSessions.index') }}">Sessions</a></li>
 
                             </ul>
-
-
                         </li>
+
+
+
+
                         <li class="dropdown">
                             <a class="nav-link dropdown-toggle" style="color:#727472;" data-bs-toggle="dropdown" aria-expanded="false" href="">
                                Attendance

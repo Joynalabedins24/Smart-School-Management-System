@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class= "bg-gray  col-8 mx-auto mb-2" >
-        <div> <a class="btn btn-primary" href="{{ route('subject.create') }}"> Add Subjects </a></div>
+        <div> <a class="btn btn-primary" href="{{ route('subjects.create') }}"> Add Subjects </a></div>
     </div>
     <div class="shadow-sm card col-8 mx-auto">
         <div class="card">
@@ -32,7 +32,7 @@
 
 
                                     <a class="btn fw-bold" href=""><i class="fa-solid fa-eye"></i></a>
-                                    <a class="btn fw-bold" href="{{ route('subject.edit',$Subject->id) }}""><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn fw-bold" href="{{ route('subjects.edit',$Subject->id) }}""><i class="fa-solid fa-pencil"></i></a>
 
 
                                     <button class="btn btn__delete"><i class="fa-solid fa-eraser"></i></button>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class= "bg-gray  col-8 mx-auto mb-2" >
-        <div> <a class="btn btn-primary" href="{{ route('section.create') }}"> Add Section </a></div>
+        <div> <a class="btn btn-primary" href="{{ route('sections.create') }}"> Add Section </a></div>
     </div>
     <div class="shadow-sm card col-8 mx-auto">
         <div class="card">
@@ -30,8 +30,8 @@
                                     <td>{{ $section->name }}</td>
                                     <td>{{ $section->capacity }}</td>
                                     <td>
-                                        <a class="btn btn-sm bg-warning  fw-bold" href="{{ route('section.edit',$section->id) }}"><i class="fa-solid fa-pencil"></i></a>
-                                        <form action="{{ route('section.delete',$section->id) }}" method="POST" style="display:inline;">
+                                        <a class="btn btn-sm bg-warning  fw-bold" href="{{ route('sections.edit',$section->id) }}"><i class="fa-solid fa-pencil"></i></a>
+                                        <form action="{{ route('sections.destroy',$section->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button onclick="return confirm('Delete?')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>

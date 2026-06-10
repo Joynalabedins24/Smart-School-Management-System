@@ -43,6 +43,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Student ID</th>
+                        <th scope="col">class</th>
                         <th scope="col">Age</th>
                         <th scope="col">Date of Admission</th>
                         <th scope="col">Status</th>
@@ -55,6 +56,7 @@
                             <th scope="row">{{$key + 1}}</th>
                             <td>{{ $student->student->user->name }}</td>
                             <td>{{ $student->student->student_id }}</td>
+                            <td>{{ $student->class->name }}</td>
                             <td>{{ $student->student->dob->age }}</td>
                             <td>{{ $student->student->admission_date }}</td>
                             <td>@if($student->status)
