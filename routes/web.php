@@ -189,13 +189,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | EXAMS + RESULTS
-    |--------------------------------------------------------------------------
-    */
-
-
     Route::middleware(['permission:View results'])->group(function () {
 
         Route::get('/result/marksheet', [\App\Http\Controllers\backend\ResultController::class, 'marksheet'])
