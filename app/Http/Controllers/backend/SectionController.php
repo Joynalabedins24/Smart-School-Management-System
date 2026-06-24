@@ -42,7 +42,7 @@ class SectionController extends Controller
         $section->name =$request->sectionName;
         $section->capacity = $request->Capacity;
         $section->save();
-        return redirect()->route('section.index')->with('success','Information Updated Successfully!');
+        return redirect()->route('sections.index')->with('success','Information Updated Successfully!');
     }
 
 

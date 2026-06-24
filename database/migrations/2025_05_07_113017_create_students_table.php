@@ -25,9 +25,13 @@ return new class extends Migration
             $table->foreignId('section_id')->nullable()->constrained('sections')->onDelete('set null');
 
             $table->string('guardian_name')->nullable();
+
             $table->string('guardian_phone')->nullable();
 
             $table->date('admission_date')->nullable();
+
+            $table->string('profile_photo')->nullable();
+
             $table->boolean('status')->default(1);
 
             $table->timestamps();

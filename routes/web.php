@@ -19,6 +19,7 @@ use App\Http\Controllers\backend\TeacherController;
 use App\Http\Controllers\rolepermission\PermissionController;
 use App\Http\Controllers\rolepermission\RoleController;
 use App\Http\Controllers\rolepermission\UserRoleController;
+use App\Http\Controllers\StudentProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -71,14 +72,18 @@ Route::middleware(['auth'])->group(function () {
         //academic Session
         Route::resource('AcademicSessions',AcademicSessionController::class);
         Route::put('AcademicSessions/{id}/active',[AcademicSessionController::class, 'active'])->name('AcademicSessions.active');
-
-
-
-
-
-
     });
+
     Route::middleware(['role:admin|teacher'])->group(function () {
+    });
+
+    Route::middleware(['role:student'])
+    ->group(function () {
+
+        Route::get('/student/profile',
+            [StudentProfileController::class,'index'])
+            ->name('student.profile');
+
     });
     /*
     |--------------------------------------------------------------------------

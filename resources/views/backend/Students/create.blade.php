@@ -3,22 +3,38 @@
 <div class="shadow-sm card col-11 mx-auto p-3">
     <form action="{{ route('student.store') }}" method="POST" class="row g-3 needs-validation" novalidate>
       @csrf
-        <!-- User Name  -->
-        <div class="col-md-">
-          <label for="validationCustom01" class="form-label">User Name</label>
-          <input type="text" name="userName" class="form-control" id="validationCustom01" value="{{ $student_id }}" disabled readonly>
-          <div class="invalid-feedback">
-            User name required
-          </div>
-          <div class="text-danger">
-              @error('userName')
-              {{ $message }}
-              @enderror
-          </div>
+
+
+        <!-- Student Name  -->
+        <div class="col-md-6">
+            <label class="form-label">
+                Student Name
+            </label>
+            <input  type="text" name="name" value="{{ old('name') }}" class="form-control" required>
+        </div>
+
+        <!-- Email Address  -->
+        <div class="col-md-6">
+
+            <label class="form-label">
+                Email
+            </label>
+            <input type="email" name="email" value="{{ old('email') }}" class="form-control" required >
+
+        </div>
+
+        <!-- Password  -->
+        <div class="col-md-3">
+
+            <label class="form-label">
+                Password
+            </label>
+            <input type="password" name="password" class="form-control" required >
+
         </div>
 
         <!-- Date of Birth  -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="validationCustomUsername" class="form-label">Date of birth</label>
           <div class="input-group has-validation">
             <input type="date" name="dob" value="{{ old('dob') }}" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
@@ -34,7 +50,7 @@
         </div>
 
         <!-- Date of admission  -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="validationCustom03" class="form-label">Admission Date</label>
           <input type="date" name="doa" value="{{ old('doa') }}" class="form-control" id="validationCustom03" required>
           <div class="invalid-feedback">
@@ -49,7 +65,7 @@
 
 
         <!-- Gender  -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="validationCustom04" class="form-label">Gender</label>
           <select class="form-select" name="gender"  id="validationCustom04" required>
             <option selected disabled value="{{ old('gender') }}">Choose...</option>

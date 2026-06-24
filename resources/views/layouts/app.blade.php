@@ -58,6 +58,9 @@
                                Students
                             </a>
                             <ul class="dropdown-menu">
+                                @role('student')
+                                <li><a class="dropdown-item" href="{{ route('student.profile') }}">Profile</a></li>
+                                @endrole
                                 @can('Manage students')
                                 <li><a class="dropdown-item" href="{{ route('student.index') }}">All Students</a></li>
                                 <li><a class="dropdown-item" href="{{ route('StudentSessions.index') }}">Student's Session's</a></li>

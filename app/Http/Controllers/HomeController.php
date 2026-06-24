@@ -10,6 +10,7 @@ use App\Models\FeePayment;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -81,6 +82,40 @@ class HomeController extends Controller
         $totalDue = ($totalFee + $totalLateFee) - $totalCollected;
 
 
+
+
+
+
+
+
+        $monthlyCollections = FeePayment::selectRaw("
+                                MONTH(payment_date) as month,
+                                SUM(amount) as total
+                            ")
+                            ->groupBy('month')
+                            ->orderBy('month')
+                                ->get();
+
+        $months = [ 'Jan','Feb','Mar','Apr','May','Jun',
+                    'Jul','Aug','Sep','Oct','Nov','Dec'];
+
+        $chartData = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+
+            $record = $monthlyCollections->firstWhere('month', $i);
+
+            $chartData[] = ['month' => $months[$i - 1],
+                            'total' => $record ? $record->total : 0
+                            ];
+        }
+
+        $recentAdmissions = Student::orderBy(
+                            'admission_date',
+                            'desc'
+                            )
+                            ->take(5)
+                            ->get();
     /*
     |--------------------------------------------------------------------------
     | Recent Payments
@@ -90,6 +125,13 @@ class HomeController extends Controller
         $recentPayments = FeePayment::latest()
             ->take(5)
             ->get();
+
+
+        $recentUsers = User::with('roles')
+                            ->latest()
+                            ->take(5)
+                            ->get();
+
 
         return view('home', compact(
                     'totalStudents',
@@ -103,7 +145,11 @@ class HomeController extends Controller
                     'totalCollected',
                     'totalDue',
                     'recentPayments',
-                    'attendancePercentage'
+                    'attendancePercentage',
+                    'chartData',
+                    'recentAdmissions',
+                    'recentUsers'
+
         ));
 
     }
