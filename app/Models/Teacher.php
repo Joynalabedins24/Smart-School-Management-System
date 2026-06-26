@@ -16,6 +16,10 @@ class Teacher extends Model
         'qualification',
         'subject_specialization',
         'hire_date',
+        'profile_photo',
+        'phone',
+        'address',
+        'status',
     ];
 
     public function user()
@@ -23,3 +27,5 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 }
+
+

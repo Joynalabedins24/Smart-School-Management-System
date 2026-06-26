@@ -18,7 +18,8 @@ class Student extends Model
     'admission_date',
     'guardian_name',
     'guardian_phone',
-    'address'
+    'address',
+    'profile_photo',
     ];
 
     protected $casts = [

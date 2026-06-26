@@ -14,19 +14,23 @@ return new class extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            // ইউজার টেবিলের সাথে যুক্ত, ইউজার ডিলিট হলে শিক্ষক ডেটাও ডিলিট হবে
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('employee_id')->unique(); 
-            // প্রতিটি শিক্ষককে ইউনিক আইডি
+            $table->string('employee_id')->unique();
 
-            $table->string('qualification')->nullable(); 
-            // শিক্ষাগত যোগ্যতা, খালি রাখা যাবে
+            $table->string('qualification')->nullable();
 
-            $table->string('subject_specialization')->nullable(); 
-            // কোন বিষয়ে দক্ষতা, খালি রাখা যাবে
+            $table->string('subject_specialization')->nullable();
 
             $table->date('hire_date')->nullable();
+
+            $table->string('profile_photo')->nullable();
+
+            $table->string('phone')->nullable();
+
+            $table->text('address')->nullable();
+
+            $table->boolean('status')->default(1);
 
             $table->timestamps();
         });

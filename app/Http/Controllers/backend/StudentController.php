@@ -73,73 +73,6 @@ class StudentController extends Controller
     }
 
 
-
-
-    /*function store(Request $request){
-
-        //validation process
-        $request->validate(
-            [
-
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:6',
-                'dob' => 'required|date',
-                'doa' => 'required|date',
-                'gender' => 'required',
-                'class_id' => 'required',
-                'section_id' => 'required',
-                'gName' => 'required',
-                'gPhone' => 'required',
-                'address' => 'required',
-            ]
-        );
-        $existingStudent = Student::where('user_id', Auth::user()->id)->first();
-        $existingTeacher = Teacher::where('user_id', Auth::user()->id)->first();
-
-        if ($existingStudent||$existingTeacher) {
-            return redirect()->back()->with('error', 'This user is already registered as a student!');
-        }
-        else{
-            //Generate Student ID
-            //find last student id
-            $lastStudent = Student::latest()->first();
-            //return  $lastStudent->student_id ;
-            if ($lastStudent) {
-            // 'STD-00009' → 9 + 1 = 10
-            $lastIdNumber = (int) Str::after($lastStudent->student_id, 'std_');
-            $newIdNumber = $lastIdNumber + 1;
-            } else {
-            $newIdNumber = 1;
-            }
-            $newStudentId = 'std_' . str_pad($newIdNumber, 5, '0', STR_PAD_LEFT);
-
-            $student = Student::create([
-            'user_id'          => Auth::user()->id,
-            'student_id'       => $newStudentId,
-            'dob'              => $request->dob,
-            'gender'           => $request->gender,
-            'admission_date'   => $request->doa,
-            'guardian_name'    => $request->gName,
-            'guardian_phone'   => $request->gPhone,
-            'address'          => $request->address
-            ]);
-
-            StudentSession::create([
-            'student_id'            => $student->id,
-            'class_id'              => $request->class_id,
-            'section_id'            => $request->section_id,
-            'academic_session_id'   => activeSession()->id,
-            'roll_no' => null,
-            'status' => 'active',
-            'remarks' => 'New addmission',
-            ]);
-
-            //database insertion
-            return redirect()->route('student.index')->with('success','Information Updated Successfully!');
-        }
-
-    }*/
     function store(Request $request){
         //validation process
         $request->validate(
@@ -156,6 +89,7 @@ class StudentController extends Controller
                 'gName' => 'required',
                 'gPhone' => 'required',
                 'address' => 'required',
+                'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ]
         );
         DB::beginTransaction();
@@ -171,6 +105,16 @@ class StudentController extends Controller
             'password' => Hash::make($request->password),
 
             ]);
+
+            if ($request->hasFile('profile_photo')) {
+
+                $photoName = time().'_'.
+                $request->file('profile_photo')
+                        ->getClientOriginalName();
+
+                $request->file('profile_photo')
+                        ->move(public_path('uploads/students'),$photoName);
+            }
 
             // Assign Student Role
             $user->assignRole('Student');
@@ -199,7 +143,7 @@ class StudentController extends Controller
 
             'address'       => $request->address,
 
-            //'image'         => $imageName ?? null,
+            'profile_photo' => $photoName ?? null,
 
             ]);
 

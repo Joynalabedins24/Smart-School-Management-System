@@ -25,7 +25,7 @@ class PermissionController extends Controller
             $query->where('module', $request->module);
         }
 
-        $permissions = $query->latest()->paginate(10);
+        $permissions = $query->latest()->paginate(20);
 
         return view('backend.permissions.index', compact('permissions'));
     }

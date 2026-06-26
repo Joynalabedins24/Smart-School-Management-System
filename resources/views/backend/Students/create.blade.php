@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="shadow-sm card col-11 mx-auto p-3">
-    <form action="{{ route('student.store') }}" method="POST" class="row g-3 needs-validation" novalidate>
+    <form action="{{ route('student.store') }}" method="POST" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
       @csrf
 
 
@@ -163,6 +163,17 @@
               @enderror
             </div>
         </div>
+
+        <!-- Profile Photo -->
+        <div class="col-md-12">
+            <label class="form-label">
+                Profile Photo
+            </label>
+            <input type="file" name="profile_photo" class="form-control" accept="image/*" >
+        </div>
+
+
+
 
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Add Student</button>
