@@ -39,7 +39,7 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
-        $query  = StudentSession::with(['student.user','class','section'])
+        $query  = StudentSession::with(['student','student.user','class','section'])
                 ->where('academic_session_id',activeSession()->id);
 
         // search
@@ -105,7 +105,7 @@ class StudentController extends Controller
             'password' => Hash::make($request->password),
 
             ]);
-
+            $photoName = null;
             if ($request->hasFile('profile_photo')) {
 
                 $photoName = time().'_'.

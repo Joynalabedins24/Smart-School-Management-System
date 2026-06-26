@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="shadow-sm card col-11 mx-auto p-3">
-    <form action="{{ route('student.store') }}" method="POST" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
+    <form action="{{ route('student.store') }}" method="POST" class="row g-3" enctype="multipart/form-data">
       @csrf
 
 
@@ -29,7 +29,7 @@
             <label class="form-label">
                 Password
             </label>
-            <input type="password" name="password" class="form-control" required >
+            <input type="password" name="password" value="{{ old('password')}}" class="form-control" required >
 
         </div>
 
@@ -169,7 +169,7 @@
             <label class="form-label">
                 Profile Photo
             </label>
-            <input type="file" name="profile_photo" class="form-control" accept="image/*" >
+            <input type="file" name="profile_photo" class="form-control" accept="image/*">
         </div>
 
 
