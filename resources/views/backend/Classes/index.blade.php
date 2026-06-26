@@ -1,21 +1,21 @@
 @extends('layouts.app')
 @section('content')
-    <div class= "bg-gray  col-8 mx-auto mb-2" >
+    <div class= "bg-gray  col-10 mx-auto mb-2" >
         <div> <a class="btn btn-primary" href="{{ route('classe.create') }}"> Add Class </a></div>
     </div>
-    <div class="shadow-sm card col-8 mx-auto">
+    <div class="shadow-sm card col-10 mx-auto">
         <div class="card">
             <div class="card-header">
-              Classess
+                Classes
             </div>
             <div class="card-body">
                 <table class="table">
-                    <thead>
+                    <thead class="table-dark align-middle">
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Class Name</th>
                         <th scope="col">Class Teacher Name</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" class="text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -26,17 +26,29 @@
                             <td>{{ $Classe->name }}</td>
                             <td>{{ $Classe->classTeacher->user->name }}</td>
 
-                            <td>
-                                <div class="btn-group">
+                            <td class="align-middle text-center">
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <a href=""
+                                        class="btn btn-outline-primary table-action-btn"
+                                        title="View">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('classe.edit',$Classe->id) }}"
+                                        class="btn btn-outline-success table-action-btn"
+                                        title="Edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
 
-
-                                    <a class="btn btn-sm bg-primary fw-bold" href=""><i class="fa-solid fa-eye"></i></a>
-                                    <a class="btn btn-sm bg-warning  fw-bold" href="{{ route('classe.edit',$Classe->id) }}"><i class="fa-solid fa-pencil"></i></a>
-
-                                    <form action="{{ route('classe.delete',$Classe->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('classe.delete',$Classe->id) }}" method="POST" onsubmit="return confirm('Delete this teacher?')">
                                         @csrf
                                         @method('DELETE')
-                                    <button onclick="return confirm('Delete?')" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger table-action-btn"
+                                            title="Delete">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                     </form>
                                 </div>
                             </td>
