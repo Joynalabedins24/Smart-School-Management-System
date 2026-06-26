@@ -18,7 +18,7 @@
                         <th scope="col" class="text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="align-middle">
 
                         @foreach($Classes as $key => $Classe)
                         <tr>

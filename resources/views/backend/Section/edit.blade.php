@@ -2,9 +2,11 @@
 
 @section('content')
 
-<div class="shadow-sm card col-9 mx-auto p-3">
-
-    <form action="{{ route('section.update', $section->id) }}" class="row g-3" method="POST">
+<div class="shadow-sm card col-10 mx-auto p-3">
+    <div>
+        <h2 class="fw-bold text-primary-emphasis text-center">Edit Section</h2>
+    </div>
+    <form action="{{ route('sections.update', $section->id) }}" class="row g-3" method="POST">
         @csrf
 
         <!-- Section Name -->
