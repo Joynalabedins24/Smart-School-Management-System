@@ -116,6 +116,11 @@
                                 @role('admin')
                                 <li><a class="dropdown-item" href="{{ route('AcademicSessions.index') }}">Sessions</a></li>
                                 @endrole
+
+
+                                @role('admin')
+                                <li><a class="dropdown-item" href="{{ route('classrooms.index') }}">Classroom</a></li>
+                                @endrole
                             </ul>
                         </li>
                         @endcanany

@@ -4,6 +4,7 @@
 use App\Http\Controllers\backend\AcademicSessionController;
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
+use App\Http\Controllers\backend\ClassroomController;
 use App\Http\Controllers\backend\ExamController;
 use App\Http\Controllers\backend\FeeController;
 use App\Http\Controllers\backend\FeePaymentController;
@@ -52,7 +53,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-
+    Route::resource('classrooms', ClassroomController::class);
     /*
     |--------------------------------------------------------------------------
     | ACADEMIC SETUP (ADMIN ONLY)

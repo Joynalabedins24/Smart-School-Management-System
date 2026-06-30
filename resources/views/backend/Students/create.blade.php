@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="shadow-sm card col-11 mx-auto p-3">
+<div class="shadow-sm card col-10 mx-auto p-3">
     <form action="{{ route('student.store') }}" method="POST" class="row g-3" enctype="multipart/form-data">
       @csrf
 

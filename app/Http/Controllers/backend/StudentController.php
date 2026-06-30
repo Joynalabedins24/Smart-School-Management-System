@@ -39,7 +39,7 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
-        $query  = StudentSession::with(['student','student.user','class','section'])
+        $query  = StudentSession::with(['student.user','class','section'])
                 ->where('academic_session_id',activeSession()->id);
 
         // search
@@ -184,20 +184,26 @@ class StudentController extends Controller
 
 
 
-    public function edit($id)
+    public function edit($studentSessionId)
     {
-        $student = Student::with([
-                    'currentSession.class',
-                    'currentSession.section'
-                ])->findOrFail($id);
+    $studentSession = StudentSession::with([
+        'student.user',
+        'class',
+        'section'
+    ])->findOrFail($studentSessionId);
 
-        $classes = Classe::all();
+    $classes = Classe::all();
 
-        $sections = Section::all();
+    $sections = Section::all();
 
-        $session = $student->currentSession;
-
-        return view('backend.Students.edit',compact('student','classes','sections','session'));
+    return view(
+        'backend.Students.edit',
+        compact(
+            'studentSession',
+            'classes',
+            'sections'
+        )
+    );
     }
 
 
