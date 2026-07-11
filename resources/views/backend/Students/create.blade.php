@@ -1,7 +1,29 @@
 @extends('layouts.app')
 @section('content')
 <div class="shadow-sm card col-10 mx-auto p-3">
-    <form action="{{ route('student.store') }}" method="POST" class="row g-3" enctype="multipart/form-data">
+
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d1e7dd; color: #0f5132; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <strong>🚀 Success!</strong> {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color: #842029; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <strong>⚠️ Ops!</strong> {{ session('error') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger" style="background-color: #f8d7da; color: #842029; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+    <form action="{{ route('student.store') }}" method="POST" class="row g-3" enctype="multipart/form-data" id="student-create-form">
       @csrf
 
 
@@ -165,11 +187,17 @@
         </div>
 
         <!-- Profile Photo -->
-        <div class="col-md-12">
-            <label class="form-label">
+        <div class="col-md-6">
+            <label class="form-label" style="font-weight: bold;">
                 Profile Photo
             </label>
-            <input type="file" name="profile_photo" class="form-control" accept="image/*">
+            <input type="file" name="profile_photo" id="profile_photo" class="form-control" accept="image/*">
+        </div>
+
+        <div class=" col-md-6">
+            <label class="form-label" for="avatar_file" style="font-weight: bold;">Upload Student 3D Avatar (.glb file)</label>
+            <input type="file" name="avatar_file" id="avatar_file" class="form-control" accept=".glb">
+            <small class="text-muted">Avaturn বা অন্য যেকোনো জায়গা থেকে ডাউনলোড করা .glb ফাইলটি এখানে দিন।</small>
         </div>
 
 
@@ -203,6 +231,7 @@ $('#class_id').on('change', function () {
     }
 });
 </script>
+
 
 @endsection
 

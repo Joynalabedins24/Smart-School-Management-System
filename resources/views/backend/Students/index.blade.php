@@ -162,6 +162,16 @@
 
                             <td class="align-middle text-center">
                                 <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                    <button type="button"
+                                            class="btn btn-outline-info  view-avatar-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#avatarModal"
+                                            data-name="{{ $student->student->user->name }}"
+                                            data-avatar="{{ $student->student->avatar_url }}"
+                                            title="See Avatar">
+                                        <i class="fa-solid fa-user-astronaut"></i>
+                                    </button>
+
                                     <a href=""
                                         class="btn btn-outline-primary table-action-btn"
                                         title="View">
@@ -255,6 +265,16 @@
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between">
+
+                                <button type="button"
+                                            class="btn btn-outline-info  view-avatar-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#avatarModal"
+                                            data-name="{{ $student->student->user->name }}"
+                                            data-avatar="{{ $student->student->avatar_url }}"
+                                            title="See Avatar">
+                                        <i class="fa-solid fa-user-astronaut"></i> Avater
+                                </button>
                                 <a  href=""
                                 class="btn btn-outline-primary rounded-pill">
                                     <i class="fa-solid fa-eye"></i>
@@ -289,4 +309,86 @@
         </div>
 
     </div>
+
+
+    <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #1a1a2e; color: #fff; border-radius: 15px; border: 1px solid #333;">
+            <div class="modal-header" style="border-bottom: 1px solid #333;">
+                <h5 class="modal-title" id="avatarModalLabel">
+                    🚀 <span id="modal-student-name" class="fw-bold"></span>-এর ৩ডি অবতার
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 0; position: relative; min-height: 400px; height: 450px; background: radial-gradient(circle, #252542 0%, #121224 100%);" id="modal-body-content">
+                </div>
+            <div class="modal-footer" style="border-top: 1px solid #333;">
+                <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-orbit-controls@1.3.2/dist/aframe-orbit-controls.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const avatarModal = document.getElementById('avatarModal');
+
+    // টেস্ট ১: মডাল ডিভটি স্ক্রিপ্ট খুঁজে পাচ্ছে কিনা
+    if (!avatarModal) {
+        console.error("🚨 'avatarModal' আইডির কোনো মডাল খুঁজে পাওয়া যায়নি!");
+        return;
+    }
+
+    avatarModal.addEventListener('show.bs.modal', function (event) {
+        console.log("🎯 ম্যাজিক! মডাল ওপেন হওয়ার প্রসেস শুরু হয়েছে!");
+
+        const button = event.relatedTarget;
+        const studentName = button.getAttribute('data-name') || 'Student';
+        const avatarUrl = button.getAttribute('data-avatar');
+
+        console.log("👤 স্টুডেন্ট নাম:", studentName);
+        console.log("📂 ফাইল পাথ (URL):", avatarUrl);
+
+        document.getElementById('modal-student-name').innerText = studentName;
+        const modalBody = document.getElementById('modal-body-content');
+
+        if (!avatarUrl) {
+            modalBody.innerHTML = `<div class="text-center p-5 text-muted">কোনো মডেল ফাইল আপলোড করা নেই!</div>`;
+            return;
+        }
+
+        // এ-ফ্রেম লোড করা
+        modalBody.innerHTML = `
+            <a-scene embedded style="width: 100%; height: 100%;" vr-mode-ui="enabled: false">
+                <a-ambient-light color="#ffffff" intensity="1.3"></a-ambient-light>
+                <a-directional-light position="1 3 2" intensity="0.7"></a-directional-light>
+
+                <a-entity id="avatar-model"
+                  gltf-model="${avatarUrl}"
+                  position="0 -1.5 -2.5"
+                  scale="1.2 1.2 1.2"
+                  rotation="0 180 0"
+                  animation="property: rotation;
+                             to: 0 540 0;
+                             dur: 10000;
+                             easing: linear;
+                             loop: true">
+                </a-entity>
+
+                <a-entity camera position="0 0 0"></a-entity>
+            </a-scene>
+        `;
+
+        setTimeout(() => {
+            const scene = modalBody.querySelector('a-scene');
+            if (scene && scene.resize) scene.resize();
+        }, 300);
+    });
+
+    avatarModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('modal-body-content').innerHTML = '';
+    });
+});
+</script>
 @endsection

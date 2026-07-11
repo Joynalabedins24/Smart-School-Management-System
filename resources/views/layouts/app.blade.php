@@ -71,6 +71,7 @@
                                 @can('Promotion')
                                 <li><a class="dropdown-item" href="{{ route('promotions.index') }}">Promotion</a></li>
                                 @endcan
+                                <li><a class="dropdown-item" href="{{ route('classrooms.index') }}">Classroom</a></li>
                             </ul>
                         </li>
 

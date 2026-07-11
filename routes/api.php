@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AttendanceApiController;
 use App\Http\Controllers\Api\ClassApiController;
 use App\Http\Controllers\Api\SectionApiController;
+use App\Events\PlayerMoved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,4 +57,24 @@ Route::prefix('attendance')->group(function () {
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::middleware('web')->post('/classroom/move', function (Request $request) {
+    try {
+        // রিকোয়েস্টের ডাটা ঠিকঠাক আছে কিনা তা শিওর হওয়া
+        $classroomId = $request->input('classroom_id');
+        $playerId = $request->input('player_id');
+        $position = $request->input('position');
+        $rotation = $request->input('rotation');
+
+        if ($classroomId && $playerId) {
+            // ব্রডকাস্ট ফায়ার করা
+            event(new PlayerMoved($classroomId, $playerId, $position, $rotation));
+        }
+
+        return response()->json(['status' => 'success']);
+    } catch (\Exception $e) {
+        // যদি কোনো এরর হয়, তা ল্যারাভেল লগে সেভ হবে কিন্তু এপিআই ক্র্যাশ করবে না
+        \Log::error('Reverb Sync Error: ' . $e->getMessage());
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
 });

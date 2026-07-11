@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class StudentController extends Controller
@@ -90,6 +91,7 @@ class StudentController extends Controller
                 'gPhone' => 'required',
                 'address' => 'required',
                 'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'avatar_file' => 'nullable|file|max:10240',
             ]
         );
         DB::beginTransaction();
@@ -99,21 +101,29 @@ class StudentController extends Controller
             // User Create
             $user = User::create([
             'name'     => $request->name,
-
             'email'    => $request->email,
-
             'password' => Hash::make($request->password),
 
             ]);
+            //student Profile photo Upload
             $photoName = null;
             if ($request->hasFile('profile_photo')) {
-
                 $photoName = time().'_'.
                 $request->file('profile_photo')
                         ->getClientOriginalName();
-
                 $request->file('profile_photo')
                         ->move(public_path('uploads/students'),$photoName);
+            }
+
+
+            //3d avater model upload
+            $avatarPath = null;
+            if ($request->hasFile('avatar_file')) {
+                $avatarFileName = time().'_'.$request->file('avatar_file')->getClientOriginalName();
+                // public/uploads/avatars
+                $request->file('avatar_file')->move(public_path('uploads/avatars'), $avatarFileName);
+                // generate Url
+                $avatarPath = asset('uploads/avatars/' . $avatarFileName);
             }
 
             // Assign Student Role
@@ -121,46 +131,29 @@ class StudentController extends Controller
 
             // Student ID Generate
             $student_id = Student::max('id') + 1;
-
             $student_code = 'STD-' . date('Y') . '-' . str_pad($student_id, 4,'0', STR_PAD_LEFT );
 
             // Student Create
             $student = Student::create([
-
-            'user_id'      => $user->id,
-
-            'student_id'   => $student_code,
-
-            'dob'          => $request->dob,
-
-            'admission_date'=> $request->doa,
-
-            'gender'       => $request->gender,
-
-            'guardian_name' => $request->gName,
-
-            'guardian_phone'=> $request->gPhone,
-
-            'address'       => $request->address,
-
-            'profile_photo' => $photoName ?? null,
-
+                'user_id'       => $user->id,
+                'student_id'    => $student_code,
+                'dob'           => $request->dob,
+                'admission_date'=> $request->doa,
+                'gender'        => $request->gender,
+                'guardian_name' => $request->gName,
+                'guardian_phone'=> $request->gPhone,
+                'address'       => $request->address,
+                'profile_photo' => $photoName ?? null,
+                'avatar_url'    => $avatarPath ?? null,
             ]);
 
             StudentSession::create([
-
-            'student_id' => $student->id,
-
-            'class_id' => $request->class_id,
-
-            'section_id'   => $request->section_id,
-
-            'academic_session_id' => activeSession()->id,
-
-            'roll_no' => null,
-
-            'status' => 'active',
-
+                'student_id'            => $student->id,
+                'class_id'              => $request->class_id,
+                'section_id'            => $request->section_id,
+                'academic_session_id'   => activeSession()->id,
+                'roll_no'               => null,
+                'status'                => 'active',
             ]);
 
 
@@ -173,6 +166,14 @@ class StudentController extends Controller
         }catch (\Exception $e) {
 
             DB::rollBack();
+
+            // if anny issue then uploaded file will be deleted
+            if ($photoName && file_exists(public_path('uploads/students/' . $photoName))) {
+                unlink(public_path('uploads/students/' . $photoName));
+            }
+            if (isset($avatarFileName) && file_exists(public_path('uploads/avatars/' . $avatarFileName))) {
+                unlink(public_path('uploads/avatars/' . $avatarFileName));
+            }
 
             return back()->withInput()->with(
                             'error',

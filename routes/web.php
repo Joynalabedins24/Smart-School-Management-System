@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Events\PlayerMoved;
 use App\Http\Controllers\backend\AcademicSessionController;
 use App\Http\Controllers\backend\AttendanceController;
 use App\Http\Controllers\backend\ClasseController;
@@ -21,6 +22,8 @@ use App\Http\Controllers\rolepermission\PermissionController;
 use App\Http\Controllers\rolepermission\RoleController;
 use App\Http\Controllers\rolepermission\UserRoleController;
 use App\Http\Controllers\StudentProfileController;
+//use auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +57,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 */
 Route::middleware(['auth'])->group(function () {
     Route::resource('classrooms', ClassroomController::class);
+    Route::post('/api/classroom/move', function (Request $request) {
+    broadcast(new PlayerMoved(
+        $request->classroomId,
+        $request->playerId,
+        $request->position,
+        $request->rotation
+    ))->toOthers(); // ⚡ যে পাঠাচ্ছে তাকে বাদে রুমে বাকি সবাইকে পাঠাবে
+
+    return response()->json(['success' => true]);
+    });
     /*
     |--------------------------------------------------------------------------
     | ACADEMIC SETUP (ADMIN ONLY)
