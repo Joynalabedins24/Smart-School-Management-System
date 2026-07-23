@@ -16,6 +16,8 @@ class Classroom extends Model
         'room_name',
         'room_type',
         'capacity',
+        'room_width',
+        'room_length',
         'floor_no',
         'thumbnail',
         'vr_model_path',

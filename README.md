@@ -170,7 +170,7 @@ http://127.0.0.1:8000
 
 ## 📌 Upcoming Features
 
-- Parent Management 1
+- Parent Management 
 - SMS Notification
 - Email Notification
 - Online Admission
