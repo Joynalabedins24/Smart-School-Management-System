@@ -1,8 +1,9 @@
 @extends('layouts.app')
 @section('content')
 <div class="shadow-sm card col-5 mx-auto p-3">
-    <form action="{{ route('subject.update', $subject->id)}}" method="POST" class="row g-3 needs-validation" novalidate>
+    <form action="{{ route('subjects.update', $subject->id)}}" method="POST" class="row g-3 needs-validation" novalidate>
       @csrf
+      @method("PUT")
         <!--Subject_name-->
         <div class="col-md-">
           <label for="validationCustom01" class="form-label">Subject Name</label>

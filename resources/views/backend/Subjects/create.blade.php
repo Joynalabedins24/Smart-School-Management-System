@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="shadow-sm card col-5 mx-auto p-3">
-    <form action="{{ route('subject.store')}}" method="POST" class="row g-3 needs-validation" novalidate>
+    <form action="{{ route('subjects.store')}}" method="POST" class="row g-3 needs-validation" novalidate>
       @csrf
         <!--Subject_name-->
         <div class="col-md-">

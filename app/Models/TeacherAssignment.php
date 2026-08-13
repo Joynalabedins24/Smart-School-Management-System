@@ -42,4 +42,9 @@ class TeacherAssignment extends Model
     {
         return $this->belongsTo(AcademicSession::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class,'teacher_assignment_id');
+    }
 }

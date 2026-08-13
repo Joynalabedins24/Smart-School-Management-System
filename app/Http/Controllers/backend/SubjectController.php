@@ -37,7 +37,7 @@ class SubjectController extends Controller
         $subject->name =$request->subjectName;
         $subject->class_id = $request->class_id;
         $subject->save();
-        return redirect()->route('subject.index')->with('success','Information Updated Successfully!');
+        return redirect()->route('subjects.index')->with('success','Information Updated Successfully!');
     }
 
     public function edit($id)
@@ -62,6 +62,6 @@ class SubjectController extends Controller
             'class_id' => $request->class_id
         ]);
 
-        return redirect()->route('subject.index')->with('success', 'Class Updated Successfully');
+        return redirect()->route('subjects.index')->with('success', 'Class Updated Successfully');
     }
 }

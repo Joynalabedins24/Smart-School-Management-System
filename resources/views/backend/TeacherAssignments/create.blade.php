@@ -40,7 +40,8 @@
 
                                 <option value="{{ $teacher->id }}">
 
-                                    {{ $teacher->user->name ?? '' }}
+                                    {{ $teacher->user->name ?? '' }} ------
+                                    {{ $teacher->employee_id ?? '' }}
 
                                 </option>
 
