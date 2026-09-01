@@ -22,7 +22,8 @@ class TeacherAssignmentController extends Controller
                             'class',
                             'section',
                             'subject',
-                            'academicSession'
+                            'academicSession',
+                            'schedules'
                         ])->where('academic_session_id',activeSession()->id)
                         ->latest()->get();
 

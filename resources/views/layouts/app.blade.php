@@ -234,6 +234,90 @@
         </nav>
 
         <main class="py-4">
+
+            {{-- Global Alert Message --}}
+
+@if(session('success'))
+    <div class="col-10 mx-auto mt-3">
+
+        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 rounded-3 d-flex align-items-center"
+             role="alert"
+             style="background: linear-gradient(135deg, #e8f8ef, #f7fffa);">
+
+            <div class="d-flex align-items-center">
+
+                <div class="me-3 d-flex align-items-center justify-content-center rounded-circle bg-success text-white"
+                     style="width: 42px; height: 42px; min-width: 42px;">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </div>
+
+                <div>
+                    <div class="fw-bold text-success">
+                        Success
+                    </div>
+
+                    <div class="text-dark small">
+                        {{ session('success') }}
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="button"
+                    class="btn-close ms-auto"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+
+        </div>
+
+    </div>
+@endif
+
+
+@if(session('error'))
+    <div class="col-10 mx-auto mt-3">
+
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 rounded-3 d-flex align-items-center"
+             role="alert"
+             style="background: linear-gradient(135deg, #fff0f0, #fffafa);">
+
+            <div class="d-flex align-items-center">
+
+                <div class="me-3 d-flex align-items-center justify-content-center rounded-circle bg-danger text-white"
+                     style="width: 42px; height: 42px; min-width: 42px;">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </div>
+
+                <div>
+                    <div class="fw-bold text-danger">
+                        Error
+                    </div>
+
+                    <div class="text-dark small">
+                        {{ session('error') }}
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="button"
+                    class="btn-close ms-auto"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+
+        </div>
+
+    </div>
+@endif
+
+
+
             @yield('content')
         </main>
     </div>

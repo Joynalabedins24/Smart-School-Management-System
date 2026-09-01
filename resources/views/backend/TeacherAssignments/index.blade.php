@@ -41,7 +41,8 @@
 
                             <th>Session</th>
 
-                            <th>Created At</th>
+                            <th>Shedules</th>
+
                             <th width="180"> Action </th>
 
                         </tr>
@@ -79,7 +80,56 @@
                                 </td>
 
                                 <td>
-                                    {{ $assignment->created_at->format('d M Y') }}
+                                @if($assignment->schedules->count())
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <th>Room No.</th>
+                                            <th>Day</th>
+                                            <th>Time</th>
+                                            <td align="right"> Action </td>
+                                        </tr>
+                                        @foreach ($assignment->schedules  as $schedule)
+                                            <tr>
+                                                <td> {{ $schedule->classroom->room_no }} </td>
+                                                <td> {{ $schedule->day }}</td>
+                                                <td> {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -- {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</td>
+                                                <td align="right">
+                                                    <a  href="{{ route('schedules.edit',$schedule->id) }}"
+                                                        class="btn btn-sm btn-outline-warning"
+                                                        title="Edit Schedule">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                    {{-- Delete --}}
+                                                    <form class="d-inline"  action="{{ route('schedules.destroy', $schedule->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this schedule?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-danger"
+                                                                title="Delete Schedule">
+
+                                                                <i class="fa-solid fa-trash"></i>
+
+                                                            </button>
+
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                    </table>
+                                    <a style="margin-top: 0px; width:100%;" href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id]) }}" class="btn btn-sm btn-primary ">
+                                        Add Schedule
+                                    </a>
+                                @else
+                                    <span class="badge bg-secondary">
+                                        Schedule Not Set
+                                    </span>
+                                    <a style="float: right;" href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id])}}" class="btn btn-sm btn-primary">
+                                        Set Schedule
+                                    </a>
+                                @endif
                                 </td>
                                 <td>
 

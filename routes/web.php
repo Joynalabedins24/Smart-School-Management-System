@@ -12,6 +12,7 @@ use App\Http\Controllers\backend\FeePaymentController;
 use App\Http\Controllers\backend\PromotionController;
 use App\Http\Controllers\backend\ResultController;
 use App\Http\Controllers\backend\RollAssignmentController;
+use App\Http\Controllers\backend\ScheduleController;
 use App\Http\Controllers\backend\SectionController;
 use App\Http\Controllers\backend\StudentController;
 use App\Http\Controllers\backend\StudentSessionController;
@@ -22,7 +23,6 @@ use App\Http\Controllers\rolepermission\PermissionController;
 use App\Http\Controllers\rolepermission\RoleController;
 use App\Http\Controllers\rolepermission\UserRoleController;
 use App\Http\Controllers\StudentProfileController;
-//use auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -63,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
         $request->playerId,
         $request->position,
         $request->rotation
-    ))->toOthers(); // ⚡ যে পাঠাচ্ছে তাকে বাদে রুমে বাকি সবাইকে পাঠাবে
+    ))->toOthers();
 
     return response()->json(['success' => true]);
     });
@@ -142,6 +142,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('TeacherAssignments', \App\Http\Controllers\backend\TeacherAssignmentController::class);
         Route::get('/teacher/get-subjects/{class_id}', [\App\Http\Controllers\backend\TeacherAssignmentController::class, 'getSubjects']);
 
+        //Teachers Assignment Schedule
+        Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
+        Route::post('/store-schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+        Route::get('/edit-schedules/{id}', [ScheduleController::class, 'edit'])->name('schedules.edit');
+        Route::PUT('/update-schedules/{id}', [ScheduleController::class, 'update'])->name('schedules.update');
+        Route::delete('/delete-schedules/{id}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
     });
 
     Route::middleware(['permission:Roll assignment'])->group(function () {
