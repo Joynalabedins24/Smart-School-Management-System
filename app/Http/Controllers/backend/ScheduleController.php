@@ -231,4 +231,38 @@ class ScheduleController extends Controller
                 ->route('TeacherAssignments.index')
                 ->with('success', 'Schedule deleted successfully!');
     }
+
+
+    public function assignmentSchedules($id)
+    {
+        $teacherAssignment = TeacherAssignment::with([
+            'teacher.user',
+            'class',
+            'section',
+            'subject',
+            'academicSession',
+            'schedules.classroom'
+        ])->findOrFail($id);
+
+        $schedules = $teacherAssignment->schedules()
+            ->with('classroom')
+            ->orderByRaw("
+                FIELD(day,
+                    'Saturday',
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday'
+                )
+            ")
+            ->orderBy('start_time')
+            ->get();
+
+        return view(
+            'backend.Schedules.assignment-schedules',
+            compact('teacherAssignment', 'schedules')
+        );
+    }
 }

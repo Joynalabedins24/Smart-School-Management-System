@@ -142,7 +142,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('TeacherAssignments', \App\Http\Controllers\backend\TeacherAssignmentController::class);
         Route::get('/teacher/get-subjects/{class_id}', [\App\Http\Controllers\backend\TeacherAssignmentController::class, 'getSubjects']);
 
-        //Teachers Assignment Schedule
+        //Teachers Assignment Schedule   
+        
+        Route::get('/teacher-assignment/{id}/schedules',[ScheduleController::class, 'assignmentSchedules'])->name('teacher.assignment.schedules');
+        
         Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
         Route::post('/store-schedules', [ScheduleController::class, 'store'])->name('schedules.store');
         Route::get('/edit-schedules/{id}', [ScheduleController::class, 'edit'])->name('schedules.edit');

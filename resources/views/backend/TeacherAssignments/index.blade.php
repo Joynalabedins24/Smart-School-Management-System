@@ -80,57 +80,82 @@
                                 </td>
 
                                 <td>
-                                @if($assignment->schedules->count())
-                                    <table class="table table-sm table-borderless">
-                                        <tr>
-                                            <th>Room No.</th>
-                                            <th>Day</th>
-                                            <th>Time</th>
-                                            <td align="right"> Action </td>
-                                        </tr>
-                                        @foreach ($assignment->schedules  as $schedule)
-                                            <tr>
-                                                <td> {{ $schedule->classroom->room_no }} </td>
-                                                <td> {{ $schedule->day }}</td>
-                                                <td> {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -- {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</td>
-                                                <td align="right">
-                                                    <a  href="{{ route('schedules.edit',$schedule->id) }}"
-                                                        class="btn btn-sm btn-outline-warning"
-                                                        title="Edit Schedule">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                    </a>
-                                                    {{-- Delete --}}
-                                                    <form class="d-inline"  action="{{ route('schedules.destroy', $schedule->id) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('Are you sure you want to delete this schedule?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-outline-danger"
-                                                                title="Delete Schedule">
+    @php
+        $visibleSchedules = $assignment->schedules->take(2);
+        $totalSchedules = $assignment->schedules->count();
+    @endphp
 
-                                                                <i class="fa-solid fa-trash"></i>
+    @if($totalSchedules > 0)
 
-                                                            </button>
+        <table class="table table-sm table-borderless">
+            <tr>
+                <th>Room No.</th>
+                <th>Day</th>
+                <th>Time</th>
+                <th class="text-end">Action</th>
+            </tr>
 
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
+            @foreach($visibleSchedules as $schedule)
+                <tr>
+                    <td>{{ $schedule->classroom->room_no ?? 'N/A' }}</td>
+                    <td>{{ $schedule->day }}</td>
 
-                                    </table>
-                                    <a style="margin-top: 0px; width:100%;" href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id]) }}" class="btn btn-sm btn-primary ">
-                                        Add Schedule
-                                    </a>
-                                @else
-                                    <span class="badge bg-secondary">
-                                        Schedule Not Set
-                                    </span>
-                                    <a style="float: right;" href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id])}}" class="btn btn-sm btn-primary">
-                                        Set Schedule
-                                    </a>
-                                @endif
-                                </td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}
+                        --
+                        {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
+                    </td>
+
+                    <td class="text-end">
+                        <a href="{{ route('schedules.edit', $schedule->id) }}"
+                           class="btn btn-sm btn-outline-warning">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+
+                        <form class="d-inline"
+                              action="{{ route('schedules.destroy', $schedule->id) }}"
+                              method="POST"
+                              onsubmit="return confirm('Are you sure you want to delete this schedule?')">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+
+        @if($totalSchedules > 2)
+            <a href="{{ route('teacher.assignment.schedules', $assignment->id) }}"
+               class="btn btn-sm btn-outline-info w-100 mb-2">
+                <i class="fa-solid fa-eye"></i>
+                See More ({{ $totalSchedules - 2 }} More)
+            </a>
+        @endif
+
+        <a href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id]) }}"
+           class="btn btn-sm btn-primary w-100">
+            Add Schedule
+        </a>
+
+    @else
+
+        <span class="badge bg-secondary">
+            Schedule Not Set
+        </span>
+
+        <a href="{{ route('schedules.create', ['teacher_assignment_id' => $assignment->id]) }}"
+           class="btn btn-sm btn-primary">
+            Set Schedule
+        </a>
+
+    @endif
+</td>
                                 <td>
 
                                     <a  href="{{ route('TeacherAssignments.edit',$assignment->id) }}"
